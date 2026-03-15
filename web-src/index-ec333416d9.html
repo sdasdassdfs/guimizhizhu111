@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《诡秘之主》网页交互式文字游戏</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:wght@400;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ui/css/ui.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-skull-crossbones"></i> 诡秘之主</h1>
+            <p class="subtitle">序列之路 · 命运之轮 · 隐秘主宰</p>
+        </header>
+
+        <main class="main-content">
+            <div class="game-area">
+                <div class="output-panel" id="output-panel">
+                    <div class="welcome-message">
+                        <h2><i class="fas fa-dungeon"></i> 欢迎来到诡秘世界</h2>
+                        <p>这是一个基于《诡秘之主》小说设定的文字冒险游戏。你将扮演一位踏入非凡世界的角色，选择自己的序列途径，完成晋升任务，在危险与机遇中寻求成为隐秘主宰的道路。</p>
+                        <p>游戏进度会自动保存在你的浏览器中。你可以随时返回继续冒险。</p>
+                    </div>
+                </div>
+                
+                <div class="input-panel">
+                    <div class="command-history" id="command-history"></div>
+                    <div class="input-group">
+                        <input type="text" id="command-input" placeholder="输入命令或选择下方选项..." autocomplete="off">
+                        <button id="submit-command"><i class="fas fa-paper-plane"></i> 执行</button>
+                    </div>
+                    <div class="quick-actions" id="quick-actions">
+                        <button class="quick-btn" data-command="开始游戏"><i class="fas fa-play"></i> 开始游戏</button>
+                        <button class="quick-btn" data-command="继续游戏"><i class="fas fa-history"></i> 继续游戏</button>
+                        <button class="quick-btn" data-command="途径介绍"><i class="fas fa-book"></i> 途径介绍</button>
+                        <button class="quick-btn" data-command="保存进度"><i class="fas fa-save"></i> 保存进度</button>
+                        <button class="quick-btn" data-command="收集品图鉴"><i class="fas fa-book-open"></i> 收集品图鉴</button>
+                        <button class="quick-btn" data-command="成就系统"><i class="fas fa-trophy"></i> 成就系统</button>
+                        <button class="quick-btn" data-command="天赋树"><i class="fas fa-sitemap"></i> 天赋树</button>
+                        <button class="quick-btn" data-command="NPC招募"><i class="fas fa-user-friends"></i> NPC招募</button>
+                        <button class="quick-btn" data-command="团队管理"><i class="fas fa-users"></i> 团队管理</button>
+                        <button class="quick-btn" data-command="技能强化"><i class="fas fa-magic"></i> 技能强化</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="status-card">
+                    <h3><i class="fas fa-user"></i> 角色状态</h3>
+                    <div class="status-info">
+                        <p><strong>名称:</strong> <span id="char-name">未创建</span></p>
+                        <p><strong>序列:</strong> <span id="char-pathway">未选择</span></p>
+                        <p><strong>等级:</strong> <span id="char-level">序列9</span></p>
+                        <p><strong>理智:</strong> <span id="char-sanity">100/100</span></p>
+                        <p><strong>灵性:</strong> <span id="char-spirit">50/100</span></p>
+                    </div>
+                </div>
+                
+                <div class="inventory-card">
+                    <h3><i class="fas fa-box-open"></i> 物品栏</h3>
+                    <ul id="inventory-list">
+                        <li>暂无物品</li>
+                    </ul>
+                </div>
+                
+                <div class="quest-card">
+                    <h3><i class="fas fa-scroll"></i> 当前任务</h3>
+                    <p id="current-quest">无</p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>《诡秘之主》网页交互式文字游戏 · 基于爱潜水的乌贼原著 · 本地进度自动保存</p>
+            <p class="hint"><i class="fas fa-info-circle"></i> 提示: 输入"帮助"查看可用命令</p>
+        </footer>
+    </div>
+
+    <!-- UI组件容器 -->
+    <div id="ui-component-container" style="display: none;"></div>
+    
+    <script src="ui/js/ui-manager.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
