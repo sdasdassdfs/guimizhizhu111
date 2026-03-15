@@ -1,0 +1,23 @@
+# 依赖与构建产物
+node_modules/
+dist/
+build/
+out/
+
+# 环境变量与配置
+.env
+.env.local
+.env.*.local
+config.local.js
+
+# 编辑器与系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+
+# 扣子特有（按需保留）
+.cache/
+.temp/
