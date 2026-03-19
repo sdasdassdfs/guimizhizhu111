@@ -1,0 +1,295 @@
+/* ATB战斗系统专用样式 */
+
+/* ATB行动条容器 */
+.atb-container {
+    margin: 20px 0;
+    padding: 15px;
+    background: var(--gradient-dark);
+    border-radius: 12px;
+    box-shadow: var(--shadow-deep);
+    border: 1px solid var(--accent-purple);
+}
+
+.atb-container h3 {
+    color: var(--accent-gold);
+    margin-bottom: 15px;
+    font-family: 'Cinzel', serif;
+    border-bottom: 2px solid var(--accent-purple);
+    padding-bottom: 8px;
+}
+
+.atb-team-section {
+    margin-bottom: 20px;
+}
+
+.atb-team-section h4 {
+    color: var(--text-primary);
+    font-size: 1rem;
+    margin-bottom: 10px;
+    padding-left: 5px;
+}
+
+.atb-character-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.atb-bar {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.atb-bar:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent-gold);
+}
+
+.atb-character-info {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 15px;
+}
+
+.atb-name {
+    color: var(--text-primary);
+    font-weight: bold;
+}
+
+.atb-hp {
+    color: var(--state-success);
+    font-size: 0.85rem;
+}
+
+.atb-progress-container {
+    flex: 2;
+    height: 12px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+}
+
+.atb-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-gold), #ff9900);
+    border-radius: 6px;
+    transition: width 0.5s ease;
+}
+
+.atb-status {
+    flex: 1;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    padding: 5px 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    margin-left: 15px;
+}
+
+/* 团队位置网格 */
+.position-grid-container {
+    margin: 20px 0;
+    padding: 15px;
+    background: var(--gradient-dark);
+    border-radius: 12px;
+    box-shadow: var(--shadow-deep);
+    border: 1px solid var(--accent-blue);
+}
+
+.position-grid-container h3 {
+    color: var(--accent-blue);
+    margin-bottom: 15px;
+    font-family: 'Cinzel', serif;
+    border-bottom: 2px solid var(--accent-blue);
+    padding-bottom: 8px;
+}
+
+.position-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.position-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.position-cell {
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.position-cell:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent-gold);
+}
+
+.position-cell.occupied {
+    background: rgba(30, 144, 255, 0.1);
+    border: 2px solid var(--accent-blue);
+}
+
+.position-cell.drag-over {
+    background: rgba(255, 215, 0, 0.2);
+    border-color: var(--accent-gold);
+}
+
+.position-character {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-primary);
+}
+
+.position-character i {
+    font-size: 1.5rem;
+    color: var(--accent-blue);
+}
+
+.position-character span {
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.position-info {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.position-info p {
+    margin: 5px 0;
+    color: var(--text-secondary);
+}
+
+.position-info .hint {
+    font-size: 0.8rem;
+    color: var(--accent-gold);
+    font-style: italic;
+}
+
+/* 合击技能容器 */
+.combo-container {
+    margin: 20px 0;
+    padding: 15px;
+    background: var(--gradient-dark);
+    border-radius: 12px;
+    box-shadow: var(--shadow-deep);
+    border: 1px solid var(--accent-red);
+}
+
+.combo-container h3 {
+    color: var(--accent-red);
+    margin-bottom: 15px;
+    font-family: 'Cinzel', serif;
+    border-bottom: 2px solid var(--accent-red);
+    padding-bottom: 8px;
+}
+
+.combo-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.combo-btn {
+    flex: 1;
+    min-width: 150px;
+    padding: 12px;
+    background: rgba(139, 0, 0, 0.2);
+    border: 1px solid var(--accent-red);
+    border-radius: 8px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.combo-btn:hover {
+    background: rgba(139, 0, 0, 0.4);
+    transform: translateY(-2px);
+}
+
+.combo-btn:active {
+    transform: translateY(0);
+}
+
+.combo-name {
+    font-weight: bold;
+    color: var(--accent-gold);
+}
+
+.combo-partners {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.combo-desc {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin: 5px 0;
+}
+
+.combo-cost {
+    font-size: 0.75rem;
+    color: var(--state-success);
+}
+
+.combo-energy {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.energy-bar {
+    flex: 1;
+    height: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.energy-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--state-success), #2ecc71);
+    border-radius: 5px;
+    transition: width 0.5s ease;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .position-cell {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .combo-btn {
+        min-width: 120px;
+    }
+}

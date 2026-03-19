@@ -1,0 +1,366 @@
+/* 《诡秘之主》网页游戏 - 暗黑主题样式 */
+:root {
+    --primary-dark: #0a0a0a;
+    --secondary-dark: #1a1a1a;
+    --accent-gold: #d4af37;
+    --accent-purple: #8a2be2;
+    --accent-red: #b22222;
+    --text-primary: #f0f0f0;
+    --text-secondary: #b0b0b0;
+    --border-color: #333333;
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    --hover-glow: rgba(212, 175, 55, 0.2);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto Mono', monospace;
+    background-color: var(--primary-dark);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(138, 43, 226, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(212, 175, 55, 0.05) 0%, transparent 20%);
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 头部样式 */
+.header {
+    text-align: center;
+    padding: 30px 0;
+    border-bottom: 2px solid var(--accent-gold);
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.header h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 3.5rem;
+    color: var(--accent-gold);
+    text-shadow: 0 0 10px var(--hover-glow);
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    letter-spacing: 2px;
+}
+
+/* 主要内容区域 */
+.main-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    flex: 1;
+}
+
+.game-area {
+    flex: 3;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.sidebar {
+    flex: 1;
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 输出面板 */
+.output-panel {
+    background-color: var(--secondary-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 25px;
+    flex: 1;
+    overflow-y: auto;
+    max-height: 500px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.output-panel::-webkit-scrollbar {
+    width: 8px;
+}
+
+.output-panel::-webkit-scrollbar-track {
+    background: var(--secondary-dark);
+}
+
+.output-panel::-webkit-scrollbar-thumb {
+    background: var(--accent-gold);
+    border-radius: 4px;
+}
+
+.welcome-message {
+    border-left: 4px solid var(--accent-purple);
+    padding-left: 20px;
+}
+
+.welcome-message h2 {
+    color: var(--accent-purple);
+    margin-bottom: 15px;
+    font-family: 'Cinzel', serif;
+}
+
+.welcome-message p {
+    margin-bottom: 15px;
+    color: var(--text-secondary);
+}
+
+/* 输入面板 */
+.input-panel {
+    background-color: var(--secondary-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.command-history {
+    min-height: 60px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+#command-input {
+    flex: 1;
+    padding: 12px 15px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+#command-input:focus {
+    outline: none;
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 5px var(--hover-glow);
+}
+
+#submit-command {
+    padding: 12px 25px;
+    background-color: var(--accent-purple);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Roboto Mono', monospace;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#submit-command:hover {
+    background-color: #7a1bc9;
+    transform: translateY(-2px);
+}
+
+.quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.quick-btn {
+    flex: 1;
+    min-width: 120px;
+    padding: 10px 15px;
+    background-color: rgba(212, 175, 55, 0.1);
+    border: 1px solid var(--accent-gold);
+    border-radius: 4px;
+    color: var(--accent-gold);
+    cursor: pointer;
+    font-family: 'Roboto Mono', monospace;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.quick-btn:hover {
+    background-color: var(--hover-glow);
+    transform: translateY(-2px);
+}
+
+/* 侧边栏卡片 */
+.status-card, .inventory-card, .quest-card {
+    background-color: var(--secondary-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.status-card h3, .inventory-card h3, .quest-card h3 {
+    color: var(--accent-gold);
+    margin-bottom: 15px;
+    font-family: 'Cinzel', serif;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.status-info p {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.status-info strong {
+    color: var(--text-secondary);
+}
+
+#inventory-list {
+    list-style-type: none;
+}
+
+#inventory-list li {
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--border-color);
+    color: var(--text-secondary);
+}
+
+#inventory-list li:last-child {
+    border-bottom: none;
+}
+
+#current-quest {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* 页脚 */
+.footer {
+    text-align: center;
+    padding: 25px 0;
+    margin-top: 30px;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.hint {
+    margin-top: 10px;
+    color: var(--accent-gold);
+    font-size: 0.8rem;
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+    .header h1 {
+        font-size: 2.8rem;
+    }
+    
+    .main-content {
+        flex-direction: column;
+    }
+    
+    .game-area, .sidebar {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2.2rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+    }
+    
+    .container {
+        padding: 15px;
+    }
+    
+    .input-group {
+        flex-direction: column;
+    }
+    
+    #submit-command {
+        width: 100%;
+    }
+    
+    .quick-btn {
+        min-width: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .quick-btn {
+        min-width: 80px;
+        font-size: 0.8rem;
+        padding: 8px 10px;
+    }
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.welcome-message, .status-card, .inventory-card, .quest-card {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* 游戏文本样式 */
+.game-text {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    border-left: 3px solid var(--accent-purple);
+}
+
+.game-text.system {
+    border-left-color: var(--accent-gold);
+    color: var(--accent-gold);
+}
+
+.game-text.error {
+    border-left-color: var(--accent-red);
+    color: #ff6b6b;
+}
+
+.game-text.success {
+    border-left-color: #2ecc71;
+    color: #2ecc71;
+}

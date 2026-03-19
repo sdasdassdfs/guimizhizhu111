@@ -1,0 +1,30 @@
+{
+  "id": "skill_time_reversal",
+  "name": "时间逆转",
+  "description": "占卜家途径高阶技能。逆转局部时间流，恢复自身在上回合结束时的状态（生命、灵性），并清除所有负面状态。",
+  "pathway": "占卜家",
+  "sequenceRequirement": "5",
+  "type": "heal",
+  "target": "self",
+  "spiritCost": 80,
+  "cooldownTurns": 6,
+  "durationTurns": 0,
+  "effects": [
+    {
+      "type": "statusRestore",
+      "value": "previous_turn",
+      "description": "恢复至上回合结束时的生命和灵性值"
+    },
+    {
+      "type": "cleanseAll",
+      "value": true,
+      "description": "清除所有负面状态效果"
+    }
+  ],
+  "animation": "time_rewind",
+  "icon": "⏪",
+  "damageFormula": null,
+  "healFormula": "restore_previous",
+  "isAOE": false,
+  "unlockCondition": "占卜家序列5以上"
+}

@@ -1,0 +1,276 @@
+{
+  "chapter": 1,
+  "title": "觉醒之夜",
+  "description": "在贝克兰德东区的一次意外中，你接触到了非凡特性，灵性开始觉醒。必须在24小时内稳定灵性并选择自己的道路。",
+  "quests": [
+    {
+      "id": "story_ch1_awakening",
+      "name": "灵性觉醒",
+      "type": "主线",
+      "chapter": 1,
+      "description": "你的灵性因接触非凡特性而躁动不安，必须在24小时内找到稳定方法。",
+      "giverId": "system",
+      "objectives": [
+        {
+          "id": "awaken_objective1",
+          "description": "稳定灵性，避免失控",
+          "type": "交谈",
+          "requiredCount": 1,
+          "currentCount": 0,
+          "targetId": "any_npc"
+        }
+      ],
+      "rewards": {
+        "experience": 1000,
+        "gold": 200,
+        "items": ["基础非凡特性"],
+        "reputation": {},
+        "attributePoints": 1,
+        "skillPoints": 0,
+        "unlockFeatures": ["灵性感知"]
+      },
+      "prerequisites": [],
+      "sequenceRequirement": 0,
+      "timeLimit": 86400,
+      "branchPoints": [
+        {
+          "id": "ch1_branch1_encounter",
+          "description": "面对觉醒现场，你决定如何处理？",
+          "location": "东区小巷",
+          "choices": [
+            {
+              "id": "report_to_nightwatch",
+              "text": "主动报告值夜者",
+              "effects": {
+                "reputation": { "faction": "值夜者", "amount": 20 },
+                "flags": { "sided_with_official": true },
+                "unlock": ["官方资源渠道"]
+              }
+            },
+            {
+              "id": "investigate_alone",
+              "text": "隐藏证据自行调查",
+              "effects": {
+                "reputation": { "faction": "wild_adepts", "amount": 15 },
+                "flags": { "chose_independent": true },
+                "unlock": ["隐秘行动技能"]
+              }
+            },
+            {
+              "id": "contact_black_market",
+              "text": "联系地下黑市",
+              "effects": {
+                "reputation": { "faction": "underground", "amount": 25 },
+                "flags": { "chose_underground": true },
+                "unlock": ["黑市交易权限"]
+              }
+            }
+          ]
+        }
+      ],
+      "nextQuestId": "story_ch1_sequence_choice",
+      "failCondition": {
+        "type": "timeout",
+        "duration": 86400
+      }
+    },
+    {
+      "id": "story_ch1_sequence_choice",
+      "name": "序列选择",
+      "type": "主线",
+      "chapter": 1,
+      "description": "老尼尔为你解释了三大基础途径的特性，现在你必须选择自己的初始序列。",
+      "giverId": "npc_old_nell",
+      "objectives": [
+        {
+          "id": "sequence_objective1",
+          "description": "与老尼尔交谈，了解三大途径",
+          "type": "交谈",
+          "requiredCount": 1,
+          "currentCount": 0,
+          "targetId": "npc_old_nell"
+        },
+        {
+          "id": "sequence_objective2",
+          "description": "完成所选序列的晋升仪式",
+          "type": "使用",
+          "requiredCount": 1,
+          "currentCount": 0,
+          "targetId": "ritual_materials"
+        }
+      ],
+      "rewards": {
+        "experience": 1500,
+        "gold": 300,
+        "items": ["序列9非凡特性"],
+        "reputation": {},
+        "attributePoints": 2,
+        "skillPoints": 1,
+        "unlockFeatures": ["序列9能力"]
+      },
+      "prerequisites": ["story_ch1_awakening"],
+      "sequenceRequirement": 0,
+      "timeLimit": null,
+      "branchPoints": [
+        {
+          "id": "ch1_branch2_sequence",
+          "description": "老尼尔展示了三条相对安全的途径，你会选择哪一条？",
+          "location": "值夜者资料室",
+          "choices": [
+            {
+              "id": "seq_seer",
+              "text": "占卜家途径 - 灵性与直觉",
+              "effects": {
+                "unlock": ["灵性感知增强", "基础占卜"],
+                "attributeBonus": { "intelligence": 3, "perception": 2 },
+                "flags": { "chosen_path": "seer" }
+              }
+            },
+            {
+              "id": "seq_warrior",
+              "text": "战士途径 - 身体与战斗",
+              "effects": {
+                "unlock": ["身体素质强化", "基础战斗技巧"],
+                "attributeBonus": { "strength": 4, "endurance": 3 },
+                "flags": { "chosen_path": "warrior" }
+              }
+            },
+            {
+              "id": "seq_sailor",
+              "text": "水手途径 - 适应与生存",
+              "effects": {
+                "unlock": ["水下行动能力", "风暴抗性"],
+                "attributeBonus": { "agility": 3, "stamina": 3 },
+                "flags": { "chosen_path": "sailor" }
+              }
+            }
+          ]
+        }
+      ],
+      "nextQuestId": "story_ch1_sharon_offer",
+      "failCondition": null
+    },
+    {
+      "id": "story_ch1_sharon_offer",
+      "name": "莎伦的提议",
+      "type": "主线",
+      "chapter": 1,
+      "description": "在东区的酒吧里，你遇到了神秘的莎伦。她似乎对你的觉醒很感兴趣，并提出了一个危险的合作建议。",
+      "giverId": "npc_sharon",
+      "objectives": [
+        {
+          "id": "sharon_objective1",
+          "description": "与莎伦会面，听取她的提议",
+          "type": "交谈",
+          "requiredCount": 1,
+          "currentCount": 0,
+          "targetId": "npc_sharon"
+        }
+      ],
+      "rewards": {
+        "experience": 800,
+        "gold": 150,
+        "items": ["玫瑰学派情报"],
+        "reputation": {},
+        "attributePoints": 0,
+        "skillPoints": 1,
+        "unlockFeatures": []
+      },
+      "prerequisites": ["story_ch1_sequence_choice"],
+      "sequenceRequirement": 9,
+      "timeLimit": 172800,
+      "branchPoints": [
+        {
+          "id": "ch1_branch3_sharon",
+          "description": "莎伦向你揭示了玫瑰学派的秘密，并提出合作。你会如何回应？",
+          "location": "东区地下酒吧",
+          "choices": [
+            {
+              "id": "accept_sharon",
+              "text": "接受合作，加入她的计划",
+              "effects": {
+                "reputation": { "faction": "rose_school", "amount": 30 },
+                "flags": { "allied_with_sharon": true, "betrayed_nightwatch": true },
+                "unlock": ["玫瑰学派技能", "隐藏剧情线"]
+              }
+            },
+            {
+              "id": "reject_sharon",
+              "text": "拒绝合作，保持对值夜者的忠诚",
+              "effects": {
+                "reputation": { "faction": "值夜者", "amount": 25 },
+                "flags": { "rejected_sharon": true, "loyal_to_nightwatch": true },
+                "unlock": ["值夜者高级资源"]
+              }
+            },
+            {
+              "id": "pretend_accept",
+              "text": "假装接受，实则向值夜者告密",
+              "effects": {
+                "reputation": { "faction": "值夜者", "amount": 15, "faction": "rose_school", "amount": -20 },
+                "flags": { "double_agent": true },
+                "unlock": ["谍报技巧"],
+                "risk": "可能被双方识破"
+              }
+            }
+          ]
+        }
+      ],
+      "nextQuestId": "story_ch2_mist_investigation",
+      "failCondition": {
+        "type": "timeout",
+        "duration": 172800
+      }
+    }
+  ],
+  "npcs": [
+    {
+      "id": "npc_old_nell",
+      "name": "老尼尔",
+      "description": "值夜者小队的文职人员，序列9窥秘人，负责神秘学资料管理。",
+      "location": "值夜者总部资料室",
+      "dialogueTree": {
+        "startNode": "greeting",
+        "nodes": [
+          {
+            "id": "greeting",
+            "speaker": "老尼尔",
+            "text": "哦，新来的？看起来你的灵性很不稳定。别担心，每个刚觉醒的人都会这样。",
+            "choices": [
+              { "id": "ask_about_awakening", "text": "我该怎么办？", "nextNodeId": "advice" },
+              { "id": "ask_about_paths", "text": "有哪些途径可以选择？", "nextNodeId": "path_explanation" }
+            ]
+          },
+          {
+            "id": "advice",
+            "speaker": "老尼尔",
+            "text": "首先，深呼吸。非凡特性已经与你融合，现在你需要学习控制它，而不是被它控制。我会教你一些基础冥想技巧。",
+            "choices": [
+              { "id": "continue", "text": "请继续", "nextNodeId": "meditation_instruction" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "npc_sharon",
+      "name": "莎伦",
+      "description": "出现在东区酒吧的神秘女性，实为玫瑰学派的叛逃者，序列6怨魂。",
+      "location": "东区地下酒吧",
+      "dialogueTree": {
+        "startNode": "first_meeting",
+        "nodes": [
+          {
+            "id": "first_meeting",
+            "speaker": "莎伦",
+            "text": "我注意你很久了。一个刚觉醒的非凡者，却在值夜者的眼皮底下活动...很有趣。",
+            "choices": [
+              { "id": "who_are_you", "text": "你是谁？", "nextNodeId": "self_intro" },
+              { "id": "what_do_you_want", "text": "你想要什么？", "nextNodeId": "proposal" }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

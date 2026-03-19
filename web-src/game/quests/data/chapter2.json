@@ -1,0 +1,304 @@
+{
+  "chapter": 2,
+  "title": "迷雾之城",
+  "description": "贝克兰德爆发大规模雾霾事件，实为魔女教派与极光会的联合仪式。你必须在迷雾中调查真相，阻止大规模献祭。",
+  "quests": [
+    {
+      "id": "story_ch2_mist_investigation",
+      "name": "迷雾调查",
+      "type": "主线",
+      "chapter": 2,
+      "description": "异常的大雾笼罩了贝克兰德，灵性感知告诉你这不是普通的天气现象。",
+      "giverId": "npc_nightwatch_captain",
+      "objectives": [
+        {
+          "id": "mist_objective1",
+          "description": "收集3份雾霾样本进行分析",
+          "type": "收集",
+          "requiredCount": 3,
+          "currentCount": 0,
+          "targetId": "mist_sample"
+        },
+        {
+          "id": "mist_objective2",
+          "description": "访问至少2个受影响区域",
+          "type": "探索",
+          "requiredCount": 2,
+          "currentCount": 0,
+          "targetId": "affected_area"
+        }
+      ],
+      "rewards": {
+        "experience": 1200,
+        "gold": 250,
+        "items": ["净化护符"],
+        "reputation": {},
+        "attributePoints": 1,
+        "skillPoints": 1,
+        "unlockFeatures": ["雾中视觉"]
+      },
+      "prerequisites": ["story_ch1_sharon_offer"],
+      "sequenceRequirement": 8,
+      "timeLimit": 259200,
+      "branchPoints": [
+        {
+          "id": "ch2_branch1_investigation",
+          "description": "你决定从哪个方向开始调查雾霾的源头？",
+          "location": "贝克兰德街道",
+          "choices": [
+            {
+              "id": "track_spiritual_residue",
+              "text": "追踪灵性残留",
+              "effects": {
+                "unlock": ["灵性追踪技能"],
+                "flags": { "investigation_approach": "spiritual" },
+                "reputation": { "faction": "witch_cult", "amount": 10 }
+              }
+            },
+            {
+              "id": "analyze_weather_anomaly",
+              "text": "分析气象异常",
+              "effects": {
+                "unlock": ["气象分析知识"],
+                "flags": { "investigation_approach": "scientific" },
+                "reputation": { "faction": "military", "amount": 15 }
+              }
+            },
+            {
+              "id": "listen_underground_rumors",
+              "text": "监听地下传言",
+              "effects": {
+                "unlock": ["情报网络"],
+                "flags": { "investigation_approach": "informal" },
+                "reputation": { "faction": "underground", "amount": 20 }
+              }
+            }
+          ]
+        }
+      ],
+      "nextQuestId": "story_ch2_faction_game",
+      "failCondition": {
+        "type": "timeout",
+        "duration": 259200
+      }
+    },
+    {
+      "id": "story_ch2_faction_game",
+      "name": "阵营博弈",
+      "type": "主线",
+      "chapter": 2,
+      "description": "值夜者、军方和野生非凡者都在争夺雾霾事件的控制权，你必须小心周旋。",
+      "giverId": "npc_military_officer",
+      "objectives": [
+        {
+          "id": "faction_objective1",
+          "description": "与至少两个不同势力的代表交谈",
+          "type": "交谈",
+          "requiredCount": 2,
+          "currentCount": 0,
+          "targetId": "faction_representative"
+        },
+        {
+          "id": "faction_objective2",
+          "description": "获得一份关于仪式的情报",
+          "type": "收集",
+          "requiredCount": 1,
+          "currentCount": 0,
+          "targetId": "ritual_info"
+        }
+      ],
+      "rewards": {
+        "experience": 1400,
+        "gold": 300,
+        "items": ["阵营徽章"],
+        "reputation": {},
+        "attributePoints": 2,
+        "skillPoints": 1,
+        "unlockFeatures": ["外交手腕"]
+      },
+      "prerequisites": ["story_ch2_mist_investigation"],
+      "sequenceRequirement": 8,
+      "timeLimit": null,
+      "branchPoints": [
+        {
+          "id": "ch2_branch2_tris_confrontation",
+          "description": "你终于找到了雾霾的源头——魔女教派的特莉丝·奇克。面对这个强大的敌人，你会选择什么策略？",
+          "location": "废弃教堂地下",
+          "choices": [
+            {
+              "id": "persuade_betrayal",
+              "text": "尝试说服她背叛魔女教派",
+              "effects": {
+                "requirements": { "charisma": 12 },
+                "successEffects": {
+                  "flags": { "tris_betrayed": true },
+                  "unlock": ["内应情报"],
+                  "reputation": { "faction": "witch_cult", "amount": -40 }
+                },
+                "failureEffects": {
+                  "flags": { "tris_hostile": true },
+                  "reputation": { "faction": "witch_cult", "amount": -20 }
+                }
+              }
+            },
+            {
+              "id": "force_suppress",
+              "text": "武力镇压，直接击败她",
+              "effects": {
+                "requirements": { "combat": 10 },
+                "successEffects": {
+                  "flags": { "tris_defeated": true },
+                  "items": ["痛苦魔女特性"],
+                  "experience": 2000
+                },
+                "failureEffects": {
+                  "flags": { "escaped_injured": true },
+                  "status": "受伤"
+                }
+              }
+            },
+            {
+              "id": "temporary_cooperation",
+              "text": "暂时合作，获取短期利益",
+              "effects": {
+                "effects": {
+                  "flags": { "temporary_alliance": true },
+                  "items": ["魔女教派信物"],
+                  "reputation": { "faction": "witch_cult", "amount": 15 },
+                  "risk": "可能被值夜者视为叛徒"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "nextQuestId": "story_ch2_ritual_stop",
+      "failCondition": null
+    },
+    {
+      "id": "story_ch2_ritual_stop",
+      "name": "仪式阻止",
+      "type": "主线",
+      "chapter": 2,
+      "description": "你发现了至少三处献祭节点，必须在仪式完成前破坏它们。",
+      "giverId": "npc_a_mister",
+      "objectives": [
+        {
+          "id": "ritual_objective1",
+          "description": "破坏至少一处献祭节点",
+          "type": "使用",
+          "requiredCount": 1,
+          "currentCount": 0,
+          "targetId": "sacrificial_node"
+        }
+      ],
+      "rewards": {
+        "experience": 1800,
+        "gold": 400,
+        "items": ["净化圣水"],
+        "reputation": {},
+        "attributePoints": 2,
+        "skillPoints": 2,
+        "unlockFeatures": ["仪式破坏专精"]
+      },
+      "prerequisites": ["story_ch2_faction_game"],
+      "sequenceRequirement": 7,
+      "timeLimit": 86400,
+      "branchPoints": [
+        {
+          "id": "ch2_branch3_node_handling",
+          "description": "面对献祭节点，你决定如何处置？",
+          "location": "献祭节点",
+          "choices": [
+            {
+              "id": "destroy_completely",
+              "text": "彻底破坏节点",
+              "effects": {
+                "effects": {
+                  "flags": { "node_destroyed": true },
+                  "reputation": { "faction": "值夜者", "amount": 20 },
+                  "risk": "可能引发魔女教派的报复"
+                }
+              }
+            },
+            {
+              "id": "alter_ritual",
+              "text": "篡改仪式，为己所用",
+              "effects": {
+                "requirements": { "occult": 8 },
+                "successEffects": {
+                  "flags": { "ritual_hijacked": true },
+                  "experience": 2500,
+                  "risk": "可能被仪式反噬"
+                },
+                "failureEffects": {
+                  "flags": { "ritual_backfired": true },
+                  "status": "污染"
+                }
+              }
+            },
+            {
+              "id": "record_knowledge",
+              "text": "假装破坏，实则记录仪式知识",
+              "effects": {
+                "effects": {
+                  "flags": { "ritual_recorded": true },
+                  "unlock": ["高级仪式知识"],
+                  "reputation": { "faction": "witch_cult", "amount": 5 },
+                  "risk": "可能助长邪恶"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "nextQuestId": "story_ch3_angel_contact",
+      "failCondition": {
+        "type": "timeout",
+        "duration": 86400
+      }
+    }
+  ],
+  "npcs": [
+    {
+      "id": "npc_tris_chick",
+      "name": "特莉丝·奇克",
+      "description": "魔女教派在贝克兰德的负责人，序列5痛苦魔女，迷雾事件的主谋之一。",
+      "location": "废弃教堂地下",
+      "dialogueTree": {
+        "startNode": "confrontation",
+        "nodes": [
+          {
+            "id": "confrontation",
+            "speaker": "特莉丝",
+            "text": "啊，又一个自以为是的英雄。你以为你能阻止这场盛宴吗？",
+            "choices": [
+              { "id": "reason", "text": "为什么要这么做？", "nextNodeId": "explanation" },
+              { "id": "threaten", "text": "我会阻止你！", "nextNodeId": "battle" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "npc_a_mister",
+      "name": "A先生",
+      "description": "极光会贝克兰德分部领袖，序列5牧羊人，狂热崇拜真实造物主。",
+      "location": "地下祭坛",
+      "dialogueTree": {
+        "startNode": "first_encounter",
+        "nodes": [
+          {
+            "id": "first_encounter",
+            "speaker": "A先生",
+            "text": "主在注视着你，迷途的羔羊。加入我们，你将获得真正的救赎。",
+            "choices": [
+              { "id": "listen", "text": "继续说", "nextNodeId": "preaching" },
+              { "id": "reject", "text": "我拒绝！", "nextNodeId": "hostility" }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

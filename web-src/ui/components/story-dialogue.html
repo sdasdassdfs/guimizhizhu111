@@ -1,0 +1,598 @@
+<!-- 剧情对话组件 -->
+<div class="ui-modal story-dialogue-modal" id="story-dialogue-modal">
+    <div class="modal-content dark-theme">
+        <div class="modal-header">
+            <h3 class="modal-title" id="dialogue-title">剧情对话</h3>
+            <button class="close-btn" onclick="UIManager.hideModal()">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+            <!-- NPC信息 -->
+            <div class="npc-info-section">
+                <div class="npc-portrait" id="npc-portrait">
+                    <img src="" alt="NPC头像" id="npc-portrait-img">
+                </div>
+                <div class="npc-details">
+                    <h4 id="npc-name">未知NPC</h4>
+                    <p class="npc-description" id="npc-description">暂无描述</p>
+                    <div class="npc-location" id="npc-location">位置未知</div>
+                </div>
+            </div>
+            
+            <!-- 对话内容 -->
+            <div class="dialogue-content-section">
+                <div class="dialogue-bubble" id="dialogue-bubble">
+                    <div class="speaker" id="dialogue-speaker">说话者</div>
+                    <div class="text" id="dialogue-text">对话内容将显示在这里...</div>
+                </div>
+                
+                <!-- 选项容器 -->
+                <div class="choices-container" id="choices-container">
+                    <div class="choice-title">选择你的回应：</div>
+                    <div class="choices-list" id="choices-list">
+                        <!-- 选项将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+                
+                <!-- 继续按钮（当没有选择时） -->
+                <div class="continue-section" id="continue-section">
+                    <button class="btn-continue" id="btn-continue">继续</button>
+                </div>
+            </div>
+            
+            <!-- 剧情进度 -->
+            <div class="story-progress-section">
+                <div class="progress-label">剧情进度</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-background">
+                        <div class="progress-bar-fill" id="story-progress-bar"></div>
+                    </div>
+                    <div class="progress-text" id="story-progress-text">第1章 0%</div>
+                </div>
+                <div class="chapter-info">
+                    <span id="current-chapter">第一章：觉醒之夜</span>
+                    <span id="chapter-objectives">目标：0/3</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="StoryDialogue.skipDialogue()">跳过对话</button>
+            <button class="btn-secondary" onclick="StoryDialogue.logConversation()">记录日志</button>
+            <button class="btn-primary" onclick="StoryDialogue.autoAdvance()">自动前进</button>
+        </div>
+    </div>
+</div>
+
+<style>
+/* 剧情对话模态框样式 */
+.story-dialogue-modal .modal-content {
+    max-width: 800px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border: 1px solid #3949ab;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+}
+
+.story-dialogue-modal .modal-header {
+    border-bottom: 1px solid #3949ab;
+    padding: 15px 20px;
+    background: rgba(25, 25, 50, 0.8);
+}
+
+.story-dialogue-modal .modal-title {
+    color: #bb86fc;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.story-dialogue-modal .close-btn {
+    color: #bb86fc;
+    font-size: 1.8rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.story-dialogue-modal .modal-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* NPC信息区域 */
+.npc-info-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 15px;
+    background: rgba(30, 30, 60, 0.6);
+    border-radius: 8px;
+    border: 1px solid #4a4a8a;
+}
+
+.npc-portrait {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #bb86fc;
+    background: #2a2a4a;
+}
+
+.npc-portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.npc-details h4 {
+    color: #bb86fc;
+    margin: 0 0 8px 0;
+    font-size: 1.3rem;
+}
+
+.npc-description {
+    color: #a0a0d0;
+    font-size: 0.9rem;
+    margin: 0 0 5px 0;
+    line-height: 1.4;
+}
+
+.npc-location {
+    color: #70a1ff;
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+/* 对话内容区域 */
+.dialogue-content-section {
+    background: rgba(20, 20, 40, 0.8);
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #4a4a8a;
+}
+
+.dialogue-bubble {
+    background: rgba(40, 40, 80, 0.9);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-left: 5px solid #bb86fc;
+}
+
+.dialogue-bubble .speaker {
+    color: #70a1ff;
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.dialogue-bubble .text {
+    color: #d0d0f0;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+/* 选项容器 */
+.choices-container {
+    margin-top: 20px;
+}
+
+.choice-title {
+    color: #bb86fc;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.choices-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.choice-item {
+    background: rgba(50, 50, 100, 0.8);
+    border: 2px solid #4a4a8a;
+    border-radius: 8px;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #d0d0f0;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.choice-item:hover {
+    background: rgba(70, 70, 140, 0.9);
+    border-color: #70a1ff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(112, 161, 255, 0.3);
+}
+
+.choice-item.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: #666;
+}
+
+.choice-item.disabled:hover {
+    background: rgba(50, 50, 100, 0.8);
+    transform: none;
+    box-shadow: none;
+}
+
+.choice-item .choice-requirements {
+    font-size: 0.85rem;
+    color: #ff9800;
+    margin-top: 5px;
+}
+
+/* 继续按钮 */
+.continue-section {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.btn-continue {
+    background: linear-gradient(135deg, #3949ab 0%, #283593 100%);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-continue:hover {
+    background: linear-gradient(135deg, #4a5bcc 0%, #3949ab 100%);
+    box-shadow: 0 5px 15px rgba(57, 73, 171, 0.4);
+}
+
+/* 剧情进度区域 */
+.story-progress-section {
+    background: rgba(25, 25, 50, 0.7);
+    border-radius: 8px;
+    padding: 15px;
+    border: 1px solid #4a4a8a;
+}
+
+.progress-label {
+    color: #bb86fc;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.progress-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.progress-bar-background {
+    flex-grow: 1;
+    height: 12px;
+    background: rgba(60, 60, 100, 0.8);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #bb86fc 0%, #70a1ff 100%);
+    border-radius: 6px;
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+.progress-text {
+    color: #a0a0d0;
+    font-size: 0.9rem;
+    min-width: 100px;
+}
+
+.chapter-info {
+    display: flex;
+    justify-content: space-between;
+    color: #70a1ff;
+    font-size: 0.95rem;
+}
+
+/* 模态框底部按钮 */
+.story-dialogue-modal .modal-footer {
+    border-top: 1px solid #3949ab;
+    padding: 15px 20px;
+    background: rgba(25, 25, 50, 0.8);
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #bb86fc 0%, #9c64ff 100%);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-secondary {
+    background: rgba(60, 60, 100, 0.8);
+    color: #d0d0f0;
+    border: 1px solid #4a4a8a;
+    padding: 8px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #cc97fd 0%, #ad75ff 100%);
+}
+
+.btn-secondary:hover {
+    background: rgba(80, 80, 140, 0.9);
+}
+</style>
+
+<script>
+/**
+ * 剧情对话管理器
+ */
+class StoryDialogue {
+    static currentDialogue = null;
+    static currentNode = null;
+    static npcData = null;
+    static onComplete = null;
+    
+    /**
+     * 开始剧情对话
+     * @param {Object} npcData - NPC数据
+     * @param {Object} dialogueTree - 对话树
+     * @param {Function} onComplete - 完成回调
+     */
+    static start(npcData, dialogueTree, onComplete = null) {
+        this.npcData = npcData;
+        this.currentDialogue = dialogueTree;
+        this.onComplete = onComplete;
+        
+        // 加载NPC信息
+        this.loadNPCInfo();
+        
+        // 开始对话
+        this.gotoNode(dialogueTree.startNode);
+        
+        // 显示模态框
+        UIManager.showComponent('story-dialogue');
+    }
+    
+    /**
+     * 加载NPC信息到UI
+     */
+    static loadNPCInfo() {
+        if (!this.npcData) return;
+        
+        document.getElementById('npc-name').textContent = this.npcData.name;
+        document.getElementById('npc-description').textContent = this.npcData.description;
+        document.getElementById('npc-location').textContent = this.npcData.location;
+        
+        // 如果有头像图片，设置（占位符）
+        const portraitImg = document.getElementById('npc-portrait-img');
+        portraitImg.src = this.npcData.portrait || 'ui/images/default-npc.png';
+        portraitImg.alt = this.npcData.name;
+    }
+    
+    /**
+     * 跳转到指定对话节点
+     * @param {string} nodeId - 节点ID
+     */
+    static gotoNode(nodeId) {
+        const dialogueTree = this.currentDialogue;
+        if (!dialogueTree || !dialogueTree.nodes) return;
+        
+        const node = dialogueTree.nodes.find(n => n.id === nodeId);
+        if (!node) {
+            console.error(`对话节点 ${nodeId} 未找到`);
+            this.endDialogue();
+            return;
+        }
+        
+        this.currentNode = node;
+        
+        // 更新对话内容
+        document.getElementById('dialogue-speaker').textContent = node.speaker;
+        document.getElementById('dialogue-text').textContent = node.text;
+        
+        // 处理选项
+        this.updateChoices(node);
+        
+        // 如果没有选项且没有nextNodeId，显示继续按钮
+        const hasChoices = node.choices && node.choices.length > 0;
+        const hasNextNode = node.nextNodeId || (node.choices && node.choices.some(c => c.nextNodeId));
+        
+        document.getElementById('choices-container').style.display = hasChoices ? 'block' : 'none';
+        document.getElementById('continue-section').style.display = !hasChoices ? 'block' : 'none';
+        
+        // 如果没有后续内容，继续按钮将结束对话
+        const continueBtn = document.getElementById('btn-continue');
+        if (!hasNextNode) {
+            continueBtn.textContent = '结束对话';
+            continueBtn.onclick = () => this.endDialogue();
+        } else {
+            continueBtn.textContent = '继续';
+            continueBtn.onclick = () => this.advanceDialogue();
+        }
+    }
+    
+    /**
+     * 更新选项列表
+     * @param {Object} node - 当前对话节点
+     */
+    static updateChoices(node) {
+        const choicesList = document.getElementById('choices-list');
+        choicesList.innerHTML = '';
+        
+        if (!node.choices || node.choices.length === 0) return;
+        
+        node.choices.forEach(choice => {
+            const choiceItem = document.createElement('div');
+            choiceItem.className = 'choice-item';
+            choiceItem.textContent = choice.text;
+            
+            // 检查条件是否满足
+            const isDisabled = choice.condition && !this.checkCondition(choice.condition);
+            if (isDisabled) {
+                choiceItem.classList.add('disabled');
+                
+                // 添加条件提示
+                const reqSpan = document.createElement('div');
+                reqSpan.className = 'choice-requirements';
+                reqSpan.textContent = this.getConditionText(choice.condition);
+                choiceItem.appendChild(reqSpan);
+            } else {
+                choiceItem.onclick = () => this.selectChoice(choice);
+            }
+            
+            choicesList.appendChild(choiceItem);
+        });
+    }
+    
+    /**
+     * 选择选项
+     * @param {Object} choice - 选择的选项
+     */
+    static selectChoice(choice) {
+        // 应用选项效果
+        if (choice.effects) {
+            this.applyEffects(choice.effects);
+        }
+        
+        // 跳转到下一个节点
+        if (choice.nextNodeId) {
+            this.gotoNode(choice.nextNodeId);
+        } else {
+            this.advanceDialogue();
+        }
+    }
+    
+    /**
+     * 前进对话
+     */
+    static advanceDialogue() {
+        const node = this.currentNode;
+        if (!node) return;
+        
+        // 如果有nextNodeId，跳转
+        if (node.nextNodeId) {
+            this.gotoNode(node.nextNodeId);
+            return;
+        }
+        
+        // 否则结束对话
+        this.endDialogue();
+    }
+    
+    /**
+     * 结束对话
+     */
+    static endDialogue() {
+        this.currentDialogue = null;
+        this.currentNode = null;
+        this.npcData = null;
+        
+        UIManager.hideModal();
+        
+        if (this.onComplete) {
+            this.onComplete();
+        }
+    }
+    
+    /**
+     * 检查条件是否满足
+     * @param {Object} condition - 条件对象
+     * @returns {boolean}
+     */
+    static checkCondition(condition) {
+        if (!condition) return true;
+        
+        // 简化实现，实际游戏中需要集成GameState
+        console.log('检查条件:', condition);
+        return true; // 临时返回true
+    }
+    
+    /**
+     * 获取条件文本描述
+     * @param {Object} condition - 条件对象
+     * @returns {string}
+     */
+    static getConditionText(condition) {
+        if (!condition) return '';
+        
+        switch (condition.type) {
+            case 'attribute':
+                return `需要${condition.attribute} ≥ ${condition.value}`;
+            case 'quest':
+                return `需要完成任务: ${condition.questId}`;
+            case 'flag':
+                return `需要标记: ${condition.flagKey}`;
+            default:
+                return '条件未满足';
+        }
+    }
+    
+    /**
+     * 应用效果
+     * @param {Object} effects - 效果对象
+     */
+    static applyEffects(effects) {
+        // 简化实现，实际游戏中需要集成GameState
+        console.log('应用效果:', effects);
+    }
+    
+    /**
+     * 跳过对话
+     */
+    static skipDialogue() {
+        this.endDialogue();
+    }
+    
+    /**
+     * 记录对话日志
+     */
+    static logConversation() {
+        console.log('对话记录:', {
+            npc: this.npcData,
+            dialogue: this.currentDialogue,
+            currentNode: this.currentNode
+        });
+    }
+    
+    /**
+     * 自动前进对话
+     */
+    static autoAdvance() {
+        const interval = setInterval(() => {
+            if (!this.currentNode) {
+                clearInterval(interval);
+                return;
+            }
+            
+            this.advanceDialogue();
+            
+            // 如果对话结束，清除定时器
+            if (!this.currentNode) {
+                clearInterval(interval);
+            }
+        }, 3000); // 每3秒自动前进
+    }
+}
+</script>

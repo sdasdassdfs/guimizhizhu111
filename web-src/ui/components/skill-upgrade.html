@@ -1,0 +1,1193 @@
+<div class="ui-container skill-upgrade-container" id="skill-upgrade-container">
+    <style>
+        /* 技能强化界面专用样式 */
+        .skill-upgrade-main {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .upgrade-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .upgrade-header h2 {
+            color: var(--pathway-gold);
+            margin-bottom: 10px;
+        }
+        
+        .upgrade-header p {
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* 技能选择区域 */
+        .skill-selection-section {
+            background: var(--gradient-dark);
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid var(--accent-purple);
+        }
+        
+        .skill-selection-header {
+            margin-bottom: 25px;
+        }
+        
+        .skill-selection-header h3 {
+            color: var(--accent-purple);
+            margin: 0 0 15px 0;
+            font-family: 'Cinzel', serif;
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .skill-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(106, 13, 173, 0.3);
+            position: relative;
+        }
+        
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-light);
+            border-color: var(--accent-purple);
+        }
+        
+        .skill-card.selected {
+            border-color: var(--accent-gold);
+            background: rgba(212, 175, 55, 0.1);
+        }
+        
+        .skill-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--accent-gold);
+        }
+        
+        .skill-name {
+            color: var(--text-primary);
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        
+        .skill-description {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        
+        .skill-level {
+            display: inline-block;
+            background: var(--accent-purple);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        /* 强化分支区域 */
+        .upgrade-branches-section {
+            background: var(--gradient-dark);
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid var(--accent-green);
+        }
+        
+        .branches-header {
+            margin-bottom: 25px;
+        }
+        
+        .branches-header h3 {
+            color: var(--accent-green);
+            margin: 0 0 15px 0;
+            font-family: 'Cinzel', serif;
+        }
+        
+        .branches-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .upgrade-branch {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            padding: 25px;
+            border: 2px solid rgba(34, 139, 34, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .upgrade-branch:hover {
+            border-color: var(--accent-green);
+            box-shadow: 0 5px 15px rgba(34, 139, 34, 0.2);
+        }
+        
+        .upgrade-branch.recommended {
+            border-color: var(--accent-gold);
+            background: rgba(212, 175, 55, 0.05);
+        }
+        
+        .branch-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .branch-name {
+            color: var(--accent-green);
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+        
+        .branch-recommended {
+            background: linear-gradient(135deg, var(--accent-gold), #b8860b);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .branch-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .branch-effects {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .branch-effect-card {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 3px solid var(--state-success);
+        }
+        
+        .effect-label {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .effect-value {
+            color: var(--state-success);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .branch-costs {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .costs-title {
+            color: var(--accent-gold);
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .cost-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            margin: 8px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+        }
+        
+        .cost-item.insufficient {
+            color: var(--state-danger);
+        }
+        
+        .cost-item.sufficient {
+            color: var(--state-success);
+        }
+        
+        .cost-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .cost-icon {
+            font-size: 1.2rem;
+        }
+        
+        .cost-amount {
+            font-weight: bold;
+        }
+        
+        .branch-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 25px;
+        }
+        
+        .branch-info {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .branch-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .branch-select-btn {
+            background: linear-gradient(135deg, var(--state-success), #27ae60);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .branch-select-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            transform: translateY(-2px);
+        }
+        
+        .branch-select-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .branch-reset-btn {
+            background: var(--secondary-dark);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .branch-reset-btn:hover {
+            background: var(--secondary-color);
+            color: white;
+        }
+        
+        /* 资源消耗面板 */
+        .resource-costs-section {
+            background: var(--gradient-dark);
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid var(--accent-blue);
+        }
+        
+        .resources-header {
+            margin-bottom: 25px;
+        }
+        
+        .resources-header h3 {
+            color: var(--accent-blue);
+            margin: 0 0 15px 0;
+            font-family: 'Cinzel', serif;
+        }
+        
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .resource-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .resource-icon {
+            font-size: 2rem;
+            color: var(--accent-gold);
+        }
+        
+        .resource-info {
+            flex: 1;
+        }
+        
+        .resource-name {
+            color: var(--text-primary);
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .resource-amount {
+            color: var(--state-success);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        /* 对比面板 */
+        .comparison-section {
+            background: var(--gradient-dark);
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid var(--accent-red);
+        }
+        
+        .comparison-header {
+            margin-bottom: 25px;
+        }
+        
+        .comparison-header h3 {
+            color: var(--accent-red);
+            margin: 0 0 15px 0;
+            font-family: 'Cinzel', serif;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .comparison-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 25px;
+        }
+        
+        .comparison-title {
+            color: var(--accent-gold);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .comparison-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .comparison-item {
+            margin: 12px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .comparison-item:before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--state-success);
+            font-size: 1.5rem;
+        }
+        
+        .comparison-text {
+            color: var(--text-secondary);
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .skills-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .branch-effects {
+                grid-template-columns: 1fr;
+            }
+            
+            .resources-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .branch-actions {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
+            }
+        }
+    </style>
+
+    <div class="ui-modal" id="skill-upgrade-modal">
+        <div class="ui-modal-content">
+            <button class="ui-modal-close" id="upgrade-close">&times;</button>
+            
+            <div class="skill-upgrade-main">
+                <!-- 头部信息 -->
+                <div class="upgrade-header">
+                    <h2><i class="fas fa-magic"></i> 技能强化系统</h2>
+                    <p>
+                        通过消耗资源解锁技能的强化分支，每个分支提供独特的战斗效果和战斗风格变化。
+                        选择适合你当前战斗策略的强化路线。
+                    </p>
+                </div>
+
+                <!-- 技能选择 -->
+                <div class="skill-selection-section">
+                    <div class="skill-selection-header">
+                        <h3><i class="fas fa-crosshairs"></i> 选择要强化的技能</h3>
+                        <p>点击选择一项技能，查看其可用的强化分支</p>
+                    </div>
+                    
+                    <div class="skills-grid" id="skills-grid">
+                        <!-- 技能卡片动态生成 -->
+                        <div class="skill-card selected" data-skill-id="basic_attack">
+                            <div class="skill-icon">⚔️</div>
+                            <div class="skill-name">灵性射击</div>
+                            <div class="skill-description">基础远程攻击，消耗5点灵性造成伤害</div>
+                            <div class="skill-level">Lv.3</div>
+                        </div>
+                        
+                        <div class="skill-card" data-skill-id="divination">
+                            <div class="skill-icon">🔮</div>
+                            <div class="skill-name">危险预知</div>
+                            <div class="skill-description">预知敌人行动，提升闪避率</div>
+                            <div class="skill-level">Lv.2</div>
+                        </div>
+                        
+                        <div class="skill-card" data-skill-id="spirit_shield">
+                            <div class="skill-icon">🛡️</div>
+                            <div class="skill-name">灵性护盾</div>
+                            <div class="skill-description">生成吸收伤害的护盾</div>
+                            <div class="skill-level">Lv.1</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 强化分支 -->
+                <div class="upgrade-branches-section">
+                    <div class="branches-header">
+                        <h3><i class="fas fa-code-branch"></i> 强化分支选择</h3>
+                        <p>每个分支代表不同的强化方向，选择后会永久改变技能效果</p>
+                    </div>
+                    
+                    <div class="branches-container" id="branches-container">
+                        <!-- 分支动态生成 -->
+                        <div class="upgrade-branch recommended" data-branch-id="precision">
+                            <div class="branch-header">
+                                <div class="branch-name">精准射击分支</div>
+                                <div class="branch-recommended">推荐</div>
+                            </div>
+                            
+                            <div class="branch-description">
+                                专注于提升射击的精准度和稳定性，牺牲部分伤害换取更高的命中率和暴击率。
+                                适合远程控制和对敏捷敌人的战斗。
+                            </div>
+                            
+                            <div class="branch-effects">
+                                <div class="branch-effect-card">
+                                    <div class="effect-label">命中率</div>
+                                    <div class="effect-value">+15%</div>
+                                </div>
+                                <div class="branch-effect-card">
+                                    <div class="effect-label">暴击率</div>
+                                    <div class="effect-value">+10%</div>
+                                </div>
+                                <div class="branch-effect-card">
+                                    <div class="effect-label">射程</div>
+                                    <div class="effect-value">+20%</div>
+                                </div>
+                                <div class="branch-effect-card">
+                                    <div class="effect-label">伤害</div>
+                                    <div class="effect-value">-10%</div>
+                                </div>
+                            </div>
+                            
+                            <div class="branch-costs">
+                                <h4 class="costs-title">强化消耗</h4>
+                                
+                                <div class="cost-item sufficient">
+                                    <div class="cost-name">
+                                        <span class="cost-icon">💰</span>
+                                        <span>金币</span>
+                                    </div>
+                                    <div class="cost-amount">500</div>
+                                </div>
+                                
+                                <div class="cost-item sufficient">
+                                    <div class="cost-name">
+                                        <span class="cost-icon">🧪</span>
+                                        <span>灵性精华</span>
+                                    </div>
+                                    <div class="cost-amount">3</div>
+                                </div>
+                                
+                                <div class="cost-item sufficient">
+                                    <div class="cost-name">
+                                        <span class="cost-icon">⚡</span>
+                                        <span>序列能量</span>
+                                    </div>
+                                    <div class="cost-amount">10</div>
+                                </div>
+                            </div>
+                            
+                            <div class="branch-actions">
+                                <div class="branch-info">
+                                    <p><i class="fas fa-info-circle"></i> 选择后将永久改变技能效果，可以使用重置卷轴重新选择</p>
+                                </div>
+                                <div class="branch-buttons">
+                                    <button class="branch-reset-btn" id="reset-branch-btn">
+                                        <i class="fas fa-undo"></i> 重置分支
+                                    </button>
+                                    <button class="branch-select-btn" id="select-branch-btn">
+                                        <i class="fas fa-check"></i> 选择此分支
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 更多分支... -->
+                    </div>
+                </div>
+
+                <!-- 资源消耗总览 -->
+                <div class="resource-costs-section">
+                    <div class="resources-header">
+                        <h3><i class="fas fa-coins"></i> 当前资源</h3>
+                        <p>确认强化分支前，请确保你拥有足够的资源</p>
+                    </div>
+                    
+                    <div class="resources-grid" id="resources-grid">
+                        <div class="resource-card">
+                            <div class="resource-icon">💰</div>
+                            <div class="resource-info">
+                                <div class="resource-name">金币</div>
+                                <div class="resource-amount">1,500</div>
+                            </div>
+                        </div>
+                        
+                        <div class="resource-card">
+                            <div class="resource-icon">🧪</div>
+                            <div class="resource-info">
+                                <div class="resource-name">灵性精华</div>
+                                <div class="resource-amount">5</div>
+                            </div>
+                        </div>
+                        
+                        <div class="resource-card">
+                            <div class="resource-icon">⚡</div>
+                            <div class="resource-info">
+                                <div class="resource-name">序列能量</div>
+                                <div class="resource-amount">25</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 分支效果对比 -->
+                <div class="comparison-section">
+                    <div class="comparison-header">
+                        <h3><i class="fas fa-balance-scale"></i> 分支效果对比</h3>
+                        <p>不同分支的战斗风格和适合场景</p>
+                    </div>
+                    
+                    <div class="comparison-grid" id="comparison-grid">
+                        <div class="comparison-card">
+                            <div class="comparison-title">精准射击</div>
+                            <ul class="comparison-list">
+                                <li class="comparison-item">
+                                    <span class="comparison-text">高命中率，适合对抗敏捷敌人</span>
+                                </li>
+                                <li class="comparison-item">
+                                    <span class="comparison-text">稳定输出，暴击率提升</span>
+                                </li>
+                                <li class="comparison-item">
+                                    <span class="comparison-text">射程优势，安全距离战斗</span>
+                                </li>
+                                <li class="comparison-item">
+                                    <span class="comparison-text">推荐给喜欢控制战斗节奏的玩家</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="comparison-card">
+                            <div class="comparison-title">强力射击</div>
+                            <ul class="comparison-list">
+                                <li class="comparison-item">
+                                    <span class="comparison-text">高爆发伤害，一击制敌</span>
+                                </li>
+                                <li class="comparison-item">
+                                    <span class="comparison-text">可能击退或眩晕敌人</span>
+                                </li>
+                                <li class="comparison-item">
+                                    <span class="comparison-text">消耗更多灵性值</span>
+                                </li>
+                                <li class="comparison-item">
+                                    <span class="comparison-text">推荐给追求极致输出的玩家</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="comparison-card">
+                            <div class="comparison-title">多重射击</div>
+                            <ul class="comparison-list">
+                                <li class="comparison-item">
+                                    <span class="comparison-text">同时攻击多个目标</span>
+                                </li>
+                                <li class="comparison-item">
+                                    <span class="comparison-text">对付群体敌人效果显著</span>
+                                </li>
+                                <li class="comparison-item">
+                                    <span class="comparison-text">单体伤害略有降低</span>
+                                </li>
+                                <li class="comparison-item">
+                                    <span class="comparison-text">推荐给需要应对围攻的玩家</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// 技能强化管理器
+class SkillUpgradeManager {
+    constructor() {
+        this.selectedSkill = null;
+        this.selectedBranch = null;
+        this.playerResources = {};
+        this.skills = [];
+        this.upgradeBranches = {};
+        
+        this.bindEvents();
+        this.loadData();
+    }
+    
+    bindEvents() {
+        // 关闭按钮
+        document.getElementById('upgrade-close').addEventListener('click', () => {
+            document.getElementById('skill-upgrade-modal').style.display = 'none';
+        });
+        
+        // 技能选择
+        document.getElementById('skills-grid').addEventListener('click', (e) => {
+            const skillCard = e.target.closest('.skill-card');
+            if (skillCard) {
+                this.selectSkill(skillCard.dataset.skillId);
+            }
+        });
+        
+        // 分支选择按钮
+        document.getElementById('select-branch-btn').addEventListener('click', () => {
+            if (this.selectedBranch) {
+                this.confirmUpgrade(this.selectedBranch);
+            }
+        });
+        
+        // 重置分支按钮
+        document.getElementById('reset-branch-btn').addEventListener('click', () => {
+            this.resetSkillUpgrade();
+        });
+    }
+    
+    async loadData() {
+        try {
+            // 加载技能数据
+            this.skills = [
+                {
+                    id: 'basic_attack',
+                    name: '灵性射击',
+                    icon: '⚔️',
+                    description: '基础远程攻击，消耗5点灵性造成伤害',
+                    level: 3,
+                    currentBranch: null
+                },
+                {
+                    id: 'divination',
+                    name: '危险预知',
+                    icon: '🔮',
+                    description: '预知敌人行动，提升闪避率',
+                    level: 2,
+                    currentBranch: null
+                },
+                {
+                    id: 'spirit_shield',
+                    name: '灵性护盾',
+                    icon: '🛡️',
+                    description: '生成吸收伤害的护盾',
+                    level: 1,
+                    currentBranch: null
+                }
+            ];
+            
+            // 加载强化分支数据
+            this.upgradeBranches = {
+                'basic_attack': [
+                    {
+                        id: 'precision',
+                        name: '精准射击',
+                        description: '专注于提升射击的精准度和稳定性，牺牲部分伤害换取更高的命中率和暴击率。',
+                        effects: [
+                            { label: '命中率', value: '+15%' },
+                            { label: '暴击率', value: '+10%' },
+                            { label: '射程', value: '+20%' },
+                            { label: '伤害', value: '-10%' }
+                        ],
+                        costs: [
+                            { type: 'gold', amount: 500, icon: '💰' },
+                            { type: 'spirit_essence', amount: 3, icon: '🧪' },
+                            { type: 'sequence_energy', amount: 10, icon: '⚡' }
+                        ],
+                        recommended: true,
+                        strategy: '远程控制，稳定输出'
+                    },
+                    {
+                        id: 'power',
+                        name: '强力射击',
+                        description: '大幅提升伤害输出，但消耗更多灵性并降低射程。适合近距离爆发战斗。',
+                        effects: [
+                            { label: '伤害', value: '+30%' },
+                            { label: '暴击伤害', value: '+20%' },
+                            { label: '射程', value: '-15%' },
+                            { label: '灵性消耗', value: '+50%' }
+                        ],
+                        costs: [
+                            { type: 'gold', amount: 600, icon: '💰' },
+                            { type: 'spirit_essence', amount: 4, icon: '🧪' },
+                            { type: 'sequence_energy', amount: 12, icon: '⚡' }
+                        ],
+                        recommended: false,
+                        strategy: '近距离爆发，高伤害'
+                    }
+                ]
+            };
+            
+            // 加载玩家资源
+            this.playerResources = {
+                gold: 1500,
+                spirit_essence: 5,
+                sequence_energy: 25,
+                reset_scrolls: 2
+            };
+            
+            // 初始选择第一个技能
+            this.selectSkill('basic_attack');
+            this.renderResources();
+            
+        } catch (error) {
+            console.error('加载技能强化数据失败:', error);
+        }
+    }
+    
+    selectSkill(skillId) {
+        // 更新技能选择状态
+        document.querySelectorAll('.skill-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+        
+        const skillCard = document.querySelector(`.skill-card[data-skill-id="${skillId}"]`);
+        if (skillCard) {
+            skillCard.classList.add('selected');
+        }
+        
+        this.selectedSkill = skillId;
+        this.renderUpgradeBranches(skillId);
+    }
+    
+    renderUpgradeBranches(skillId) {
+        const container = document.getElementById('branches-container');
+        const branches = this.upgradeBranches[skillId] || [];
+        
+        container.innerHTML = '';
+        
+        branches.forEach(branch => {
+            const branchEl = this.createBranchElement(branch);
+            container.appendChild(branchEl);
+        });
+        
+        // 更新分支对比
+        this.renderBranchComparison(branches);
+    }
+    
+    createBranchElement(branch) {
+        const branchEl = document.createElement('div');
+        branchEl.className = 'upgrade-branch';
+        branchEl.dataset.branchId = branch.id;
+        
+        if (branch.recommended) {
+            branchEl.classList.add('recommended');
+        }
+        
+        // 检查是否已选择该分支
+        const currentSkill = this.skills.find(s => s.id === this.selectedSkill);
+        const isCurrentBranch = currentSkill && currentSkill.currentBranch === branch.id;
+        
+        let headerHtml = `
+            <div class="branch-header">
+                <div class="branch-name">${branch.name}</div>
+        `;
+        
+        if (branch.recommended) {
+            headerHtml += `<div class="branch-recommended">推荐</div>`;
+        }
+        
+        if (isCurrentBranch) {
+            headerHtml += `<div class="branch-current" style="background: var(--state-success); color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.8rem;">当前</div>`;
+        }
+        
+        headerHtml += `</div>`;
+        
+        // 生成效果卡片
+        let effectsHtml = '';
+        if (branch.effects && branch.effects.length > 0) {
+            effectsHtml = '<div class="branch-effects">';
+            branch.effects.forEach(effect => {
+                effectsHtml += `
+                    <div class="branch-effect-card">
+                        <div class="effect-label">${effect.label}</div>
+                        <div class="effect-value">${effect.value}</div>
+                    </div>
+                `;
+            });
+            effectsHtml += '</div>';
+        }
+        
+        // 生成消耗列表
+        let costsHtml = '';
+        if (branch.costs && branch.costs.length > 0) {
+            costsHtml = `
+                <div class="branch-costs">
+                    <h4 class="costs-title">强化消耗</h4>
+            `;
+            
+            branch.costs.forEach(cost => {
+                const hasEnough = this.playerResources[cost.type] >= cost.amount;
+                const costClass = hasEnough ? 'sufficient' : 'insufficient';
+                
+                costsHtml += `
+                    <div class="cost-item ${costClass}">
+                        <div class="cost-name">
+                            <span class="cost-icon">${cost.icon}</span>
+                            <span>${this.getResourceName(cost.type)}</span>
+                        </div>
+                        <div class="cost-amount">${cost.amount}</div>
+                    </div>
+                `;
+            });
+            
+            costsHtml += `</div>`;
+        }
+        
+        branchEl.innerHTML = `
+            ${headerHtml}
+            <div class="branch-description">${branch.description}</div>
+            ${effectsHtml}
+            ${costsHtml}
+            <div class="branch-actions">
+                <div class="branch-info">
+                    <p><i class="fas fa-info-circle"></i> 分支策略: ${branch.strategy}</p>
+                </div>
+                <div class="branch-buttons">
+                    <button class="branch-reset-btn" data-branch-id="${branch.id}" ${!isCurrentBranch ? 'disabled' : ''}>
+                        <i class="fas fa-undo"></i> 重置分支
+                    </button>
+                    <button class="branch-select-btn" data-branch-id="${branch.id}" ${isCurrentBranch ? 'disabled' : ''}>
+                        <i class="fas fa-check"></i> ${isCurrentBranch ? '已选择' : '选择此分支'}
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        // 添加事件监听
+        const selectBtn = branchEl.querySelector('.branch-select-btn');
+        const resetBtn = branchEl.querySelector('.branch-reset-btn');
+        
+        selectBtn.addEventListener('click', () => {
+            this.selectBranch(branch.id);
+        });
+        
+        resetBtn.addEventListener('click', () => {
+            this.resetSkillUpgrade();
+        });
+        
+        // 点击整个分支卡片也可以选择
+        branchEl.addEventListener('click', (e) => {
+            if (!e.target.closest('button')) {
+                this.selectBranch(branch.id);
+            }
+        });
+        
+        return branchEl;
+    }
+    
+    getResourceName(type) {
+        const names = {
+            'gold': '金币',
+            'spirit_essence': '灵性精华',
+            'sequence_energy': '序列能量',
+            'reset_scrolls': '重置卷轴'
+        };
+        return names[type] || type;
+    }
+    
+    selectBranch(branchId) {
+        this.selectedBranch = branchId;
+        this.updateBranchSelection();
+        
+        // 检查资源是否足够
+        const canUpgrade = this.checkUpgradeRequirements(branchId);
+        
+        if (canUpgrade) {
+            // 高亮选中分支
+            document.querySelectorAll('.upgrade-branch').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            const branchEl = document.querySelector(`.upgrade-branch[data-branch-id="${branchId}"]`);
+            if (branchEl) {
+                branchEl.classList.add('selected');
+            }
+            
+            // 更新主选择按钮
+            const selectBtn = document.getElementById('select-branch-btn');
+            selectBtn.disabled = false;
+            selectBtn.innerHTML = `<i class="fas fa-check"></i> 选择此分支`;
+            
+        } else {
+            alert('资源不足，无法选择此分支');
+        }
+    }
+    
+    updateBranchSelection() {
+        // 更新所有分支按钮状态
+        document.querySelectorAll('.branch-select-btn').forEach(btn => {
+            const branchId = btn.dataset.branchId;
+            const currentSkill = this.skills.find(s => s.id === this.selectedSkill);
+            const isCurrentBranch = currentSkill && currentSkill.currentBranch === branchId;
+            
+            btn.disabled = isCurrentBranch;
+            btn.innerHTML = isCurrentBranch ? 
+                `<i class="fas fa-check"></i> 已选择` :
+                `<i class="fas fa-check"></i> 选择此分支`;
+        });
+    }
+    
+    checkUpgradeRequirements(branchId) {
+        const skill = this.skills.find(s => s.id === this.selectedSkill);
+        if (!skill) return false;
+        
+        const branch = this.upgradeBranches[this.selectedSkill]?.find(b => b.id === branchId);
+        if (!branch) return false;
+        
+        // 检查每个消耗资源是否足够
+        for (const cost of branch.costs) {
+            if (this.playerResources[cost.type] < cost.amount) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    confirmUpgrade(branchId) {
+        const canUpgrade = this.checkUpgradeRequirements(branchId);
+        if (!canUpgrade) {
+            alert('资源不足，无法强化');
+            return;
+        }
+        
+        if (confirm(`确定要选择"${branchId}"分支吗？这将消耗相应的资源。`)) {
+            // 执行强化
+            this.executeUpgrade(branchId);
+        }
+    }
+    
+    executeUpgrade(branchId) {
+        const skill = this.skills.find(s => s.id === this.selectedSkill);
+        const branch = this.upgradeBranches[this.selectedSkill]?.find(b => b.id === branchId);
+        
+        if (!skill || !branch) return;
+        
+        // 消耗资源
+        for (const cost of branch.costs) {
+            this.playerResources[cost.type] -= cost.amount;
+        }
+        
+        // 更新技能状态
+        skill.currentBranch = branchId;
+        
+        // 更新界面
+        this.renderResources();
+        this.renderUpgradeBranches(this.selectedSkill);
+        this.updateBranchSelection();
+        
+        alert(`技能"${skill.name}"已成功强化为"${branch.name}"分支！`);
+        
+        // 通知游戏管理器
+        if (window.gameManager && window.gameManager.upgradeSkill) {
+            window.gameManager.upgradeSkill(skill.id, branch.id);
+        }
+    }
+    
+    resetSkillUpgrade() {
+        const skill = this.skills.find(s => s.id === this.selectedSkill);
+        if (!skill || !skill.currentBranch) {
+            alert('该技能尚未选择强化分支');
+            return;
+        }
+        
+        if (this.playerResources.reset_scrolls <= 0) {
+            alert('重置卷轴不足，无法重置分支');
+            return;
+        }
+        
+        if (confirm(`确定要重置"${skill.name}"的强化分支吗？这将消耗1个重置卷轴。`)) {
+            // 消耗重置卷轴
+            this.playerResources.reset_scrolls -= 1;
+            
+            // 清除分支选择
+            skill.currentBranch = null;
+            
+            // 更新界面
+            this.renderResources();
+            this.renderUpgradeBranches(this.selectedSkill);
+            this.updateBranchSelection();
+            
+            alert(`技能"${skill.name}"的强化分支已重置！`);
+            
+            // 通知游戏管理器
+            if (window.gameManager && window.gameManager.resetSkillUpgrade) {
+                window.gameManager.resetSkillUpgrade(skill.id);
+            }
+        }
+    }
+    
+    renderResources() {
+        const container = document.getElementById('resources-grid');
+        container.innerHTML = '';
+        
+        Object.entries(this.playerResources).forEach(([type, amount]) => {
+            const resourceCard = this.createResourceCard(type, amount);
+            container.appendChild(resourceCard);
+        });
+    }
+    
+    createResourceCard(type, amount) {
+        const card = document.createElement('div');
+        card.className = 'resource-card';
+        
+        const iconMap = {
+            'gold': '💰',
+            'spirit_essence': '🧪',
+            'sequence_energy': '⚡',
+            'reset_scrolls': '📜'
+        };
+        
+        const nameMap = {
+            'gold': '金币',
+            'spirit_essence': '灵性精华',
+            'sequence_energy': '序列能量',
+            'reset_scrolls': '重置卷轴'
+        };
+        
+        card.innerHTML = `
+            <div class="resource-icon">${iconMap[type] || '📦'}</div>
+            <div class="resource-info">
+                <div class="resource-name">${nameMap[type] || type}</div>
+                <div class="resource-amount">${amount}</div>
+            </div>
+        `;
+        
+        return card;
+    }
+    
+    renderBranchComparison(branches) {
+        const container = document.getElementById('comparison-grid');
+        container.innerHTML = '';
+        
+        branches.forEach(branch => {
+            const comparisonCard = this.createComparisonCard(branch);
+            container.appendChild(comparisonCard);
+        });
+    }
+    
+    createComparisonCard(branch) {
+        const card = document.createElement('div');
+        card.className = 'comparison-card';
+        
+        // 根据分支生成对比要点
+        const comparisonPoints = this.generateComparisonPoints(branch);
+        
+        let pointsHtml = '<ul class="comparison-list">';
+        comparisonPoints.forEach(point => {
+            pointsHtml += `
+                <li class="comparison-item">
+                    <span class="comparison-text">${point}</span>
+                </li>
+            `;
+        });
+        pointsHtml += '</ul>';
+        
+        card.innerHTML = `
+            <div class="comparison-title">${branch.name}</div>
+            ${pointsHtml}
+        `;
+        
+        return card;
+    }
+    
+    generateComparisonPoints(branch) {
+        // 根据分支信息生成对比要点
+        const points = [];
+        
+        // 添加效果相关要点
+        branch.effects.forEach(effect => {
+            if (effect.value.startsWith('+')) {
+                points.push(`提升${effect.label}${effect.value}`);
+            } else if (effect.value.startsWith('-')) {
+                points.push(`降低${effect.label}${effect.value}`);
+            } else {
+                points.push(`${effect.label}: ${effect.value}`);
+            }
+        });
+        
+        // 添加消耗相关要点
+        if (branch.costs && branch.costs.length > 0) {
+            const costSummary = branch.costs.map(c => `${this.getResourceName(c.type)}×${c.amount}`).join('、');
+            points.push(`消耗: ${costSummary}`);
+        }
+        
+        // 添加策略说明
+        points.push(`适合: ${branch.strategy}`);
+        
+        return points;
+    }
+}
+
+// 当组件加载时初始化技能强化管理器
+document.addEventListener('DOMContentLoaded', () => {
+    window.skillUpgradeManager = new SkillUpgradeManager();
+});
+</script>

@@ -1,0 +1,35 @@
+{
+  "id": "skill_iron_will",
+  "name": "钢铁意志",
+  "description": "战士途径防御技能。凝聚坚定意志，大幅提升防御力和精神抗性，同时为队友提供护盾。",
+  "pathway": "战士",
+  "sequenceRequirement": "6",
+  "type": "defense",
+  "target": "party",
+  "spiritCost": 50,
+  "cooldownTurns": 5,
+  "durationTurns": 3,
+  "effects": [
+    {
+      "type": "defenseBoost",
+      "value": 0.4,
+      "description": "防御力提升40%"
+    },
+    {
+      "type": "mentalResistBoost",
+      "value": 0.5,
+      "description": "精神抗性提升50%"
+    },
+    {
+      "type": "shield",
+      "value": 200,
+      "description": "为所有队友提供200点护盾"
+    }
+  ],
+  "animation": "iron_will",
+  "icon": "🛡️",
+  "damageFormula": null,
+  "healFormula": null,
+  "isAOE": true,
+  "unlockCondition": "战士序列6以上"
+}

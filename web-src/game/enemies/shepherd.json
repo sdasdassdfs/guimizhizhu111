@@ -1,0 +1,54 @@
+{
+  "id": "enemy_shepherd",
+  "name": "牧羊人",
+  "description": "秘祈人途径序列5，能够操纵灵体、附身控制敌人。身着黑袍，手持骨杖，眼中闪烁幽绿火焰。",
+  "sequence": "5",
+  "pathway": "秘祈人",
+  "level": 25,
+  "health": 850,
+  "maxHealth": 850,
+  "attack": 120,
+  "defense": 80,
+  "spirit": 300,
+  "maxSpirit": 300,
+  "sanity": 200,
+  "speed": 90,
+  "skills": [
+    "spirit_harvest",
+    "possession",
+    "soul_scream",
+    "dark_blessing"
+  ],
+  "lootTable": [
+    {
+      "itemId": "item_sequin_5",
+      "name": "序列5非凡特性·秘祈人",
+      "chance": 0.3,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "itemId": "item_dark_crystal",
+      "name": "黑暗水晶",
+      "chance": 0.7,
+      "minCount": 1,
+      "maxCount": 3
+    },
+    {
+      "itemId": "item_gold",
+      "name": "金币",
+      "chance": 1.0,
+      "minCount": 150,
+      "maxCount": 300
+    }
+  ],
+  "resistances": {
+    "dark": 0.5,
+    "light": 1.5,
+    "physical": 0.8,
+    "mental": 0.3
+  },
+  "weaknesses": ["light", "holy"],
+  "aiBehavior": "caster",
+  "aiPriority": ["heal", "debuff", "summon", "attack"]
+}

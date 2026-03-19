@@ -1,0 +1,169 @@
+<div class="ui-container pathway-container" id="pathway-container">
+    <div class="ui-modal" id="pathway-modal">
+        <div class="ui-modal-content">
+            <button class="ui-modal-close" id="pathway-close">&times;</button>
+            <h2><i class="fas fa-route"></i> 选择你的序列途径</h2>
+            <p class="subtitle">在22条神之途径中选择一条，开启你的非凡之路。每条途径都有独特的序列和能力体系。</p>
+            
+            <div class="pathway-filter">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">全部途径</button>
+                    <button class="filter-btn" data-filter="seer">窥秘途径</button>
+                    <button class="filter-btn" data-filter="warrior">战士途径</button>
+                    <button class="filter-btn" data-filter="mystic">神秘途径</button>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="pathway-search" placeholder="搜索途径名称或关键词...">
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
+            
+            <div class="pathway-selection" id="pathway-grid">
+                <!-- 途径卡片将通过JavaScript动态生成 -->
+                <div class="pathway-card" data-pathway="fool">
+                    <div class="pathway-icon">🃏</div>
+                    <div class="pathway-name">愚者</div>
+                    <div class="pathway-sequence">序列9：占卜家 → 序列0：愚者</div>
+                    <div class="pathway-desc">掌握命运与诡秘的途径，擅长占卜、欺诈和时空操作。</div>
+                </div>
+                
+                <div class="pathway-card" data-pathway="door">
+                    <div class="pathway-icon">🚪</div>
+                    <div class="pathway-name">门</div>
+                    <div class="pathway-sequence">序列9：学徒 → 序列0：门</div>
+                    <div class="pathway-desc">掌控空间与传送的途径，擅长空间移动和维度操作。</div>
+                </div>
+                
+                <div class="pathway-card" data-pathway="error">
+                    <div class="pathway-icon">🌀</div>
+                    <div class="pathway-name">错误</div>
+                    <div class="pathway-sequence">序列9：偷盗者 → 序列0：错误</div>
+                    <div class="pathway-desc">擅长窃取能力与命运，掌握错误与欺诈的权柄。</div>
+                </div>
+                
+                <div class="pathway-card" data-pathway="darkness">
+                    <div class="pathway-icon">🌌</div>
+                    <div class="pathway-name">黑暗</div>
+                    <div class="pathway-sequence">序列9：不眠者 → 序列0：黑暗</div>
+                    <div class="pathway-desc">掌控黑暗与隐秘的途径，擅长潜行、暗杀和隐秘行动。</div>
+                </div>
+                
+                <div class="pathway-card" data-pathway="death">
+                    <div class="pathway-icon">💀</div>
+                    <div class="pathway-name">死神</div>
+                    <div class="pathway-sequence">序列9：收尸人 → 序列0：死神</div>
+                    <div class="pathway-desc">掌控死亡与亡者的途径，擅长操纵尸体和灵魂。</div>
+                </div>
+                
+                <div class="pathway-card" data-pathway="tyrant">
+                    <div class="pathway-icon">⚡</div>
+                    <div class="pathway-name">暴君</div>
+                    <div class="pathway-sequence">序列9：水手 → 序列0：暴君</div>
+                    <div class="pathway-desc">掌控海洋与风暴的途径，擅长雷电、风暴和海洋操控。</div>
+                </div>
+                
+                <div class="pathway-card" data-pathway="red_priest">
+                    <div class="pathway-icon">🔥</div>
+                    <div class="pathway-name">红祭司</div>
+                    <div class="pathway-sequence">序列9：猎人 → 序列0：红祭司</div>
+                    <div class="pathway-desc">掌控战争与火焰的途径，擅长战术、火焰和战争艺术。</div>
+                </div>
+                
+                <div class="pathway-card" data-pathway="sun">
+                    <div class="pathway-icon">☀️</div>
+                    <div class="pathway-name">太阳</div>
+                    <div class="pathway-sequence">序列9：歌颂者 → 序列0：太阳</div>
+                    <div class="pathway-desc">掌控光明与净化的途径，擅长治疗、净化和圣光攻击。</div>
+                </div>
+            </div>
+            
+            <div class="pathway-details" id="pathway-details" style="display: none;">
+                <h3 id="selected-pathway-name">愚者</h3>
+                <div class="pathway-sequence-chart">
+                    <div class="sequence-stage">
+                        <span class="sequence-level">序列9</span>
+                        <span class="sequence-name">占卜家</span>
+                        <span class="sequence-desc">初步掌握占卜能力</span>
+                    </div>
+                    <div class="sequence-arrow">→</div>
+                    <div class="sequence-stage">
+                        <span class="sequence-level">序列8</span>
+                        <span class="sequence-name">小丑</span>
+                        <span class="sequence-desc">身体控制与直觉提升</span>
+                    </div>
+                    <div class="sequence-arrow">→</div>
+                    <div class="sequence-stage">
+                        <span class="sequence-level">序列7</span>
+                        <span class="sequence-name">魔术师</span>
+                        <span class="sequence-desc">掌握简单魔法与戏法</span>
+                    </div>
+                    <div class="sequence-arrow">→</div>
+                    <div class="sequence-stage">
+                        <span class="sequence-level">序列6</span>
+                        <span class="sequence-name">无面人</span>
+                        <span class="sequence-desc">变化外貌与身份</span>
+                    </div>
+                    <div class="sequence-arrow">→</div>
+                    <div class="sequence-stage">
+                        <span class="sequence-level">序列5</span>
+                        <span class="sequence-name">秘偶大师</span>
+                        <span class="sequence-desc">操控秘偶与灵体之线</span>
+                    </div>
+                    <div class="sequence-arrow">→</div>
+                    <div class="sequence-stage">
+                        <span class="sequence-level">序列4</span>
+                        <span class="sequence-name">诡法师</span>
+                        <span class="sequence-desc">掌握诡秘与欺诈法则</span>
+                    </div>
+                    <div class="sequence-arrow">→</div>
+                    <div class="sequence-stage">
+                        <span class="sequence-level">序列3</span>
+                        <span class="sequence-name">古代学者</span>
+                        <span class="sequence-desc">召唤历史投影</span>
+                    </div>
+                    <div class="sequence-arrow">→</div>
+                    <div class="sequence-stage">
+                        <span class="sequence-level">序列2</span>
+                        <span class="sequence-name">奇迹师</span>
+                        <span class="sequence-desc">实现愿望与创造奇迹</span>
+                    </div>
+                    <div class="sequence-arrow">→</div>
+                    <div class="sequence-stage">
+                        <span class="sequence-level">序列1</span>
+                        <span class="sequence-name">诡秘侍者</span>
+                        <span class="sequence-desc">侍奉诡秘之主</span>
+                    </div>
+                    <div class="sequence-arrow">→</div>
+                    <div class="sequence-stage">
+                        <span class="sequence-level">序列0</span>
+                        <span class="sequence-name">愚者</span>
+                        <span class="sequence-desc">掌控命运与诡秘的权柄</span>
+                    </div>
+                </div>
+                
+                <div class="pathway-abilities">
+                    <h4>核心能力</h4>
+                    <ul id="pathway-abilities-list">
+                        <li>占卜与预言</li>
+                        <li>欺诈与伪装</li>
+                        <li>时空操作</li>
+                        <li>命运干扰</li>
+                    </ul>
+                </div>
+                
+                <div class="pathway-warning">
+                    <p><i class="fas fa-exclamation-triangle"></i> 警告：序列途径一旦选择无法更改，请谨慎决定。</p>
+                </div>
+                
+                <div class="pathway-confirm">
+                    <button class="btn-primary" id="confirm-pathway">
+                        <i class="fas fa-check-circle"></i> 确认选择此途径
+                    </button>
+                    <button class="btn-secondary" id="cancel-selection">
+                        <i class="fas fa-times"></i> 重新选择
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

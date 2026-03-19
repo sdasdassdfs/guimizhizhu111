@@ -1,0 +1,176 @@
+<div class="ui-container quest-container" id="quest-container">
+    <div class="ui-modal" id="quest-modal">
+        <div class="ui-modal-content">
+            <button class="ui-modal-close" id="quest-close">&times;</button>
+            <h2><i class="fas fa-scroll"></i> 晋升任务</h2>
+            <p class="subtitle">完成序列晋升所需的任务，获取经验和非凡特性。</p>
+            
+            <div class="quest-tabs">
+                <button class="quest-tab active" data-tab="available">可接任务</button>
+                <button class="quest-tab" data-tab="active">进行中任务</button>
+                <button class="quest-tab" data-tab="completed">已完成任务</button>
+            </div>
+            
+            <div class="quest-tab-content active" id="available-quests">
+                <div class="quest-list">
+                    <div class="quest-item" data-quest-id="quest_001">
+                        <div class="quest-info">
+                            <div class="quest-title">初次占卜</div>
+                            <div class="quest-difficulty easy">简单</div>
+                            <div class="quest-desc">使用占卜能力进行一次有效的占卜预测。</div>
+                            <div class="quest-reward">
+                                <span><i class="fas fa-star"></i> 经验值: 100</span>
+                                <span><i class="fas fa-gem"></i> 非凡特性: 占卜家碎片×1</span>
+                            </div>
+                        </div>
+                        <div class="quest-action">
+                            <button class="btn-accept" data-quest-id="quest_001">接受任务</button>
+                        </div>
+                    </div>
+                    
+                    <div class="quest-item" data-quest-id="quest_002">
+                        <div class="quest-info">
+                            <div class="quest-title">收集灵性材料</div>
+                            <div class="quest-difficulty medium">中等</div>
+                            <div class="quest-desc">收集三件具有灵性的材料，用于仪式魔法。</div>
+                            <div class="quest-reward">
+                                <span><i class="fas fa-star"></i> 经验值: 250</span>
+                                <span><i class="fas fa-gem"></i> 非凡特性: 小丑碎片×1</span>
+                                <span><i class="fas fa-coins"></i> 金币: 50</span>
+                            </div>
+                        </div>
+                        <div class="quest-action">
+                            <button class="btn-accept" data-quest-id="quest_002">接受任务</button>
+                        </div>
+                    </div>
+                    
+                    <div class="quest-item" data-quest-id="quest_003">
+                        <div class="quest-info">
+                            <div class="quest-title">调查神秘事件</div>
+                            <div class="quest-difficulty hard">困难</div>
+                            <div class="quest-desc">调查城郊发生的异常灵性波动，找出原因。</div>
+                            <div class="quest-reward">
+                                <span><i class="fas fa-star"></i> 经验值: 500</span>
+                                <span><i class="fas fa-gem"></i> 非凡特性: 魔术师碎片×1</span>
+                                <span><i class="fas fa-coins"></i> 金币: 150</span>
+                            </div>
+                        </div>
+                        <div class="quest-action">
+                            <button class="btn-accept" data-quest-id="quest_003">接受任务</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="quest-tab-content" id="active-quests">
+                <div class="quest-list">
+                    <div class="quest-item active-quest" data-quest-id="quest_001">
+                        <div class="quest-info">
+                            <div class="quest-title">初次占卜</div>
+                            <div class="quest-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 30%"></div>
+                                </div>
+                                <span class="progress-text">30% 完成</span>
+                            </div>
+                            <div class="quest-objectives">
+                                <div class="objective">
+                                    <input type="checkbox" id="obj1" checked>
+                                    <label for="obj1">准备占卜用具（蜡烛、灵摆、仪式银匕）</label>
+                                </div>
+                                <div class="objective">
+                                    <input type="checkbox" id="obj2" checked>
+                                    <label for="obj2">选择合适的占卜问题</label>
+                                </div>
+                                <div class="objective">
+                                    <input type="checkbox" id="obj3">
+                                    <label for="obj3">进行一次有效的占卜仪式</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quest-action">
+                            <button class="btn-secondary" data-quest-id="quest_001">放弃任务</button>
+                            <button class="btn-primary" data-quest-id="quest_001">更新进度</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="quest-tab-content" id="completed-quests">
+                <div class="quest-list">
+                    <div class="quest-item completed-quest" data-quest-id="quest_000">
+                        <div class="quest-info">
+                            <div class="quest-title">熟悉非凡世界</div>
+                            <div class="quest-status"><i class="fas fa-check-circle"></i> 已完成</div>
+                            <div class="quest-completion-date">完成时间: 2026-02-28</div>
+                            <div class="quest-reward-earned">
+                                <span><i class="fas fa-star"></i> 经验值: 50（已获得）</span>
+                                <span><i class="fas fa-coins"></i> 金币: 20（已获得）</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="quest-details" id="quest-details" style="display: none;">
+                <h3 id="detail-quest-title">初次占卜</h3>
+                <div class="quest-meta">
+                    <span class="quest-difficulty-detail easy">简单</span>
+                    <span class="quest-type"><i class="fas fa-user-graduate"></i> 晋升任务</span>
+                    <span class="quest-required-level">要求: 序列9</span>
+                </div>
+                
+                <div class="quest-full-desc">
+                    <p>作为刚刚踏入非凡世界的新人，你需要掌握最基本的占卜能力。占卜是窥秘途径的核心技能之一，能够帮助你预见危险、寻找线索。</p>
+                    <p>任务要求：</p>
+                    <ol>
+                        <li>准备完整的占卜用具（仪式银匕、蜡烛、灵摆等）</li>
+                        <li>选择一个明确的占卜问题（避免模糊不清的提问）</li>
+                        <li>在灵性充沛的环境中进行占卜仪式</li>
+                        <li>记录占卜结果并分析其准确性</li>
+                    </ol>
+                    <p><strong>提示：</strong>占卜的成功率受到灵性状态、环境因素和问题质量的影响。</p>
+                </div>
+                
+                <div class="quest-objectives-detail">
+                    <h4>任务目标</h4>
+                    <ul id="detail-objectives">
+                        <li data-objective-id="1">准备占卜用具（蜡烛、灵摆、仪式银匕）</li>
+                        <li data-objective-id="2">选择合适的占卜问题</li>
+                        <li data-objective-id="3">进行一次有效的占卜仪式</li>
+                    </ul>
+                </div>
+                
+                <div class="quest-rewards-detail">
+                    <h4>任务奖励</h4>
+                    <div class="rewards-grid">
+                        <div class="reward-item">
+                            <i class="fas fa-star"></i>
+                            <span class="reward-label">经验值</span>
+                            <span class="reward-value">100</span>
+                        </div>
+                        <div class="reward-item">
+                            <i class="fas fa-gem"></i>
+                            <span class="reward-label">非凡特性</span>
+                            <span class="reward-value">占卜家碎片×1</span>
+                        </div>
+                        <div class="reward-item">
+                            <i class="fas fa-book"></i>
+                            <span class="reward-label">知识</span>
+                            <span class="reward-value">基础占卜技巧</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="quest-actions-detail">
+                    <button class="btn-primary" id="accept-detailed-quest">
+                        <i class="fas fa-play-circle"></i> 接受此任务
+                    </button>
+                    <button class="btn-secondary" id="back-to-quest-list">
+                        <i class="fas fa-arrow-left"></i> 返回任务列表
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

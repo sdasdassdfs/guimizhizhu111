@@ -1,0 +1,19 @@
+{
+  "name": "gods-web-game",
+  "version": "1.0.0",
+  "description": "《诡秘之主》网页交互式文字游戏",
+  "main": "main.js",
+  "scripts": {
+    "dev": "python -m http.server 8000",
+    "test": "jest --coverage",
+    "test:e2e": "cypress open",
+    "test:e2e:run": "cypress run"
+  },
+  "keywords": ["诡秘之主", "文字游戏", "网页游戏"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "cypress": "^13.6.0"
+  }
+}

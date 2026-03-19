@@ -1,0 +1,61 @@
+{
+  "id": "enemy_demon_hunter",
+  "name": "猎魔人",
+  "description": "战士途径序列4，专门狩猎非凡生物与邪恶存在。身着银灰色轻甲，手持双刃，眼神锐利如鹰。",
+  "sequence": "4",
+  "pathway": "战士",
+  "level": 30,
+  "health": 1100,
+  "maxHealth": 1100,
+  "attack": 180,
+  "defense": 120,
+  "spirit": 200,
+  "maxSpirit": 200,
+  "sanity": 250,
+  "speed": 130,
+  "skills": [
+    "double_slash",
+    "hunters_mark",
+    "evasion",
+    "piercing_strike"
+  ],
+  "lootTable": [
+    {
+      "itemId": "item_sequin_4",
+      "name": "序列4非凡特性·战士",
+      "chance": 0.25,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "itemId": "item_silver_weapon",
+      "name": "银质武器",
+      "chance": 0.5,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "itemId": "item_monster_claw",
+      "name": "怪物利爪",
+      "chance": 0.8,
+      "minCount": 2,
+      "maxCount": 5
+    },
+    {
+      "itemId": "item_gold",
+      "name": "金币",
+      "chance": 1.0,
+      "minCount": 300,
+      "maxCount": 600
+    }
+  ],
+  "resistances": {
+    "physical": 0.6,
+    "pierce": 0.4,
+    "dark": 0.8,
+    "light": 0.8
+  },
+  "weaknesses": ["magic", "fire"],
+  "aiBehavior": "aggressive",
+  "aiPriority": ["attack", "debuff", "finish", "defend"]
+}

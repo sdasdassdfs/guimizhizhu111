@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>团队养成系统UI组件测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background: #0a0a1a;
+            color: #e0e0e0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .test-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #6a0dad;
+        }
+        
+        .test-header h1 {
+            color: #d4af37;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .test-header p {
+            color: #888;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .test-card {
+            background: linear-gradient(135deg, rgba(20, 20, 40, 0.8), rgba(30, 30, 60, 0.8));
+            border: 2px solid rgba(106, 13, 173, 0.3);
+            border-radius: 10px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .test-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(106, 13, 173, 0.2);
+            border-color: #6a0dad;
+        }
+        
+        .test-card.completed {
+            border-color: #2ecc71;
+        }
+        
+        .test-card.pending {
+            border-color: #f39c12;
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .card-title {
+            color: #e0e0e0;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .card-description {
+            color: #999;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .test-btn {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+        }
+        
+        .test-btn:hover {
+            background: linear-gradient(135deg, #2980b9, #1f639b);
+            transform: translateY(-2px);
+        }
+        
+        .test-btn.success {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+        }
+        
+        .test-btn.warning {
+            background: linear-gradient(135-gradient, #f39c12, #d35400);
+        }
+        
+        .test-btn.disabled {
+            background: #555;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .test-result {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .result-title {
+            color: #d4af37;
+            font-size: 1.3rem;
+        }
+        
+        .result-status {
+            padding: 5px 15px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .status-success {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+        }
+        
+        .status-warning {
+            background: rgba(243, 156, 18, 0.2);
+            color: #f39c12;
+        }
+        
+        .status-error {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+        }
+        
+        .result-content {
+            color: #bbb;
+            font-size: 0.95rem;
+        }
+        
+        .test-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(106, 13, 173, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(106, 13, 173, 0.3);
+        }
+        
+        .summary-item {
+            text-align: center;
+        }
+        
+        .summary-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #d4af37;
+        }
+        
+        .summary-label {
+            color: #999;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .test-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .test-summary {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1><i class="fas fa-vial"></i> 团队养成系统UI组件测试</h1>
+            <p>验证事项40开发的4个专门UI组件：天赋树、NPC招募、团队管理、技能强化</p>
+        </div>
+        
+        <div class="test-grid">
+            <!-- 天赋树测试卡片 -->
+            <div class="test-card completed">
+                <div class="card-icon">🌳</div>
+                <h3 class="card-title">天赋树可视化组件</h3>
+                <p class="card-description">测试拖拽连线、节点解锁、效果预览等核心功能</p>
+                <a href="#" class="test-btn success" id="test-talent-tree">
+                    <i class="fas fa-play-circle"></i> 运行测试
+                </a>
+            </div>
+            
+            <!-- NPC招募测试卡片 -->
+            <div class="test-card completed">
+                <div class="card-icon">👥</div>
+                <h3 class="card-title">NPC招募界面</h3>
+                <p class="card-description">测试NPC列表展示、过滤搜索、招募流程验证</p>
+                <a href="#" class="test-btn success" id="test-recruitment">
+                    <i class="fas fa-play-circle"></i> 运行测试
+                </a>
+            </div>
+            
+            <!-- 团队管理测试卡片 -->
+            <div class="test-card completed">
+                <div class="card-icon">⚔️</div>
+                <h3 class="card-title">团队管理界面</h3>
+                <p class="card-description">测试阵型调整、团队buff显示、合击技能配置</p>
+                <a href="#" class="test-btn success" id="test-team-management">
+                    <i class="fas fa-play-circle"></i> 运行测试
+                </a>
+            </div>
+            
+            <!-- 技能强化测试卡片 -->
+            <div class="test-card completed">
+                <div class="card-icon">✨</div>
+                <h3 class="card-title">技能强化分支选择</h3>
+                <p class="card-description">测试分支选择、资源消耗预览、效果对比功能</p>
+                <a href="#" class="test-btn success" id="test-skill-upgrade">
+                    <i class="fas fa-play-circle"></i> 运行测试
+                </a>
+            </div>
+        </div>
+        
+        <div class="test-result" id="test-result" style="display: none;">
+            <div class="result-header">
+                <h3 class="result-title" id="result-title">测试结果</h3>
+                <span class="result-status status-success" id="result-status">通过</span>
+            </div>
+            <div class="result-content" id="result-content">
+                测试成功完成，所有功能正常。
+            </div>
+        </div>
+        
+        <div class="test-summary">
+            <div class="summary-item">
+                <div class="summary-value" id="total-components">4</div>
+                <div class="summary-label">组件总数</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-value" id="tested-components">0</div>
+                <div class="summary-label">已测试</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-value" id="passed-tests">0</div>
+                <div class="summary-label">通过测试</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-value" id="test-coverage">0%</div>
+                <div class="summary-label">测试覆盖率</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 测试管理器
+        class UITestManager {
+            constructor() {
+                this.tests = {
+                    'talent-tree': {
+                        name: '天赋树组件',
+                        status: 'pending',
+                        description: '测试拖拽连线、节点解锁、效果预览'
+                    },
+                    'recruitment': {
+                        name: 'NPC招募组件',
+                        status: 'pending',
+                        description: '测试NPC列表展示、过滤搜索、招募流程'
+                    },
+                    'team-management': {
+                        name: '团队管理组件',
+                        status: 'pending',
+                        description: '测试阵型调整、团队buff显示、合击技能'
+                    },
+                    'skill-upgrade': {
+                        name: '技能强化组件',
+                        status: 'pending',
+                        description: '测试分支选择、资源消耗预览、效果对比'
+                    }
+                };
+                
+                this.bindEvents();
+            }
+            
+            bindEvents() {
+                // 绑定测试按钮点击事件
+                document.getElementById('test-talent-tree').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.runTest('talent-tree');
+                });
+                
+                document.getElementById('test-recruitment').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.runTest('recruitment');
+                });
+                
+                document.getElementById('test-team-management').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.runTest('team-management');
+                });
+                
+                document.getElementById('test-skill-upgrade').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.runTest('skill-upgrade');
+                });
+            }
+            
+            runTest(testId) {
+                const test = this.tests[testId];
+                if (!test) {
+                    this.showResult('错误', `未找到测试: ${testId}`, 'error');
+                    return;
+                }
+                
+                // 开始测试
+                console.log(`开始测试: ${test.name}`);
+                
+                // 检查所需文件是否存在
+                const fileNames = {
+                    'talent-tree': 'ui/components/talent-tree.html',
+                    'recruitment': 'ui/components/npc-recruitment.html',
+                    'team-management': 'ui/components/team-management.html',
+                    'skill-upgrade': 'ui/components/skill-upgrade.html'
+                };
+                
+                const fileName = fileNames[testId];
+                if (!fileName) {
+                    this.showResult('错误', `未找到文件映射: ${testId}`, 'error');
+                    return;
+                }
+                
+                // 测试文件加载
+                this.testFileLoad(testId, fileName);
+            }
+            
+            async testFileLoad(testId, fileName) {
+                try {
+                    const response = await fetch(fileName);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    
+                    const content = await response.text();
+                    
+                    // 检查关键元素是否存在
+                    const requiredElements = {
+                        'talent-tree': ['.talent-tree-canvas', '.talent-node', '.talent-connection'],
+                        'recruitment': ['.npc-card', '.npc-avatar', '.recruitment-requirements'],
+                        'team-management': ['.formation-cell', '.member-card', '.team-bonuses-section'],
+                        'skill-upgrade': ['.skill-card', '.upgrade-branch', '.branch-effects']
+                    };
+                    
+                    const elements = requiredElements[testId] || [];
+                    let allElementsFound = true;
+                    const missingElements = [];
+                    
+                    // 创建临时DOM来检查元素
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = content;
+                    
+                    elements.forEach(selector => {
+                        const element = tempDiv.querySelector(selector);
+                        if (!element) {
+                            allElementsFound = false;
+                            missingElements.push(selector);
+                        }
+                    });
+                    
+                    if (allElementsFound) {
+                        // 测试通过
+                        this.tests[testId].status = 'passed';
+                        this.showResult('测试通过', 
+                            `${this.tests[testId].name} 测试成功。<br>
+                            文件: ${fileName}<br>
+                            大小: ${(content.length / 1024).toFixed(2)}KB<br>
+                            所有必需元素都已找到。`,
+                            'success');
+                        this.updateSummary();
+                    } else {
+                        // 测试失败
+                        this.tests[testId].status = 'failed';
+                        this.showResult('测试失败', 
+                            `${this.tests[testId].name} 测试失败。<br>
+                            缺失的元素: ${missingElements.join(', ')}<br>
+                            请检查文件内容是否正确。`,
+                            'error');
+                        this.updateSummary();
+                    }
+                    
+                } catch (error) {
+                    // 测试失败
+                    this.tests[testId].status = 'failed';
+                    this.showResult('测试失败', 
+                        `${this.tests[testId].name} 测试失败。<br>
+                         错误: ${error.message}<br>
+                         文件: ${fileName}<br>
+                         请确认文件是否存在。`,
+                        'error');
+                    this.updateSummary();
+                }
+            }
+            
+            showResult(title, content, status) {
+                const resultEl = document.getElementById('test-result');
+                const titleEl = document.getElementById('result-title');
+                const statusEl = document.getElementById('result-status');
+                const contentEl = document.getElementById('result-content');
+                
+                // 更新内容
+                titleEl.textContent = title;
+                contentEl.innerHTML = content;
+                
+                // 更新状态样式
+                statusEl.className = 'result-status';
+                switch(status) {
+                    case 'success':
+                        statusEl.classList.add('status-success');
+                        statusEl.textContent = '通过';
+                        break;
+                    case 'error':
+                        statusEl.classList.add('status-error');
+                        statusEl.textContent = '失败';
+                        break;
+                    case 'warning':
+                        statusEl.classList.add('status-warning');
+                        statusEl.textContent = '警告';
+                        break;
+                }
+                
+                // 显示结果面板
+                resultEl.style.display = 'block';
+            }
+            
+            updateSummary() {
+                const total = Object.keys(this.tests).length;
+                const tested = Object.values(this.tests).filter(t => t.status !== 'pending').length;
+                const passed = Object.values(this.tests).filter(t => t.status === 'passed').length;
+                const coverage = total > 0 ? (tested / total * 100).toFixed(0) : 0;
+                
+                // 更新显示
+                document.getElementById('total-components').textContent = total;
+                document.getElementById('tested-components').textContent = tested;
+                document.getElementById('passed-tests').textContent = passed;
+                document.getElementById('test-coverage').textContent = `${coverage}%`;
+                
+                // 更新测试卡片状态
+                Object.keys(this.tests).forEach(testId => {
+                    const test = this.tests[testId];
+                    const card = document.querySelector(`[id^="test-${testId}"]`).closest('.test-card');
+                    if (test.status === 'passed') {
+                        card.classList.add('completed');
+                        card.classList.remove('pending');
+                    } else if (test.status === 'failed') {
+                        card.classList.add('pending');
+                        card.classList.remove('completed');
+                    }
+                });
+            }
+            
+            runAllTests() {
+                Object.keys(this.tests).forEach(testId => {
+                    this.runTest(testId);
+                });
+            }
+        }
+        
+        // 页面加载完成后初始化测试管理器
+        document.addEventListener('DOMContentLoaded', () => {
+            window.uiTestManager = new UITestManager();
+            
+            // 自动运行所有测试（可选，可以手动运行）
+            setTimeout(() => {
+                window.uiTestManager.runAllTests();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

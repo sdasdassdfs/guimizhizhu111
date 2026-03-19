@@ -1,0 +1,854 @@
+<div class="ui-container cyclopedia-container" id="cyclopedia-container">
+    <style>
+        /* NPC图鉴专用样式 */
+        .cyclopedia-container {
+            font-family: 'Roboto Mono', monospace;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .cyclopedia-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 3px solid var(--pathway-purple);
+        }
+        
+        .cyclopedia-header h2 {
+            color: var(--pathway-gold);
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            font-family: 'Cinzel', serif;
+        }
+        
+        .cyclopedia-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* 统计面板 */
+        .stats-panel {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: var(--gradient-dark);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            border: 2px solid;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-deep);
+        }
+        
+        .stat-card.total { border-color: var(--accent-blue); }
+        .stat-card.recruited { border-color: var(--state-success); }
+        .stat-card.available { border-color: var(--state-info); }
+        .stat-card.legendary { border-color: var(--pathway-gold); }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .total .stat-value { color: var(--accent-blue); }
+        .recruited .stat-value { color: var(--state-success); }
+        .available .stat-value { color: var(--state-info); }
+        .legendary .stat-value { color: var(--pathway-gold); }
+        
+        /* 过滤和搜索 */
+        .filters-panel {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 40px;
+            border: 2px solid var(--border-color);
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .filter-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            min-width: 80px;
+        }
+        
+        .ui-select, .ui-input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            padding: 10px 15px;
+            min-width: 180px;
+        }
+        
+        .ui-select:focus, .ui-input:focus {
+            outline: none;
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 2px rgba(106, 13, 173, 0.2);
+        }
+        
+        .clear-filters-btn {
+            background: var(--secondary-dark);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .clear-filters-btn:hover {
+            background: var(--secondary-color);
+            color: white;
+        }
+        
+        /* NPC网格 */
+        .npcs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+        
+        .npc-entry {
+            background: var(--gradient-dark);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 3px solid;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .npc-entry:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-deep);
+        }
+        
+        /* 稀有度边框颜色 */
+        .npc-entry.common { border-color: #555; }
+        .npc-entry.uncommon { border-color: #4caf50; }
+        .npc-entry.rare { border-color: #2196f3; }
+        .npc-entry.epic { border-color: #9c27b0; }
+        .npc-entry.legendary { border-color: #ffc107; }
+        
+        /* 状态指示器 */
+        .status-indicator {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 10;
+        }
+        
+        .status-available {
+            background: var(--state-info);
+            color: white;
+        }
+        
+        .status-recruited {
+            background: var(--state-success);
+            color: white;
+        }
+        
+        .status-unavailable {
+            background: var(--state-danger);
+            color: white;
+        }
+        
+        /* 入口头部 */
+        .entry-header {
+            padding: 25px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(20, 20, 60, 0.7));
+        }
+        
+        .npc-avatar-large {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .entry-name {
+            color: var(--text-primary);
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .entry-details {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        
+        /* 入口内容 */
+        .entry-content {
+            padding: 20px;
+        }
+        
+        .entry-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            min-height: 80px;
+        }
+        
+        .attributes-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .attribute-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .attribute-label {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .attribute-value {
+            color: var(--state-success);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .growth-curve {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid var(--accent-green);
+        }
+        
+        .growth-label {
+            color: var(--accent-green);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        .growth-description {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+        
+        /* 图鉴完成度 */
+        .completion-panel {
+            background: var(--gradient-dark);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            border: 3px solid var(--pathway-purple);
+            margin-top: 40px;
+        }
+        
+        .completion-title {
+            color: var(--pathway-gold);
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            font-family: 'Cinzel', serif;
+        }
+        
+        .completion-bar {
+            height: 30px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .completion-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--state-success), #27ae60);
+            transition: width 0.5s ease;
+        }
+        
+        .completion-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .completion-percentage {
+            color: var(--state-success);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .stats-panel {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .npcs-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .ui-select, .ui-input {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .npcs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <div class="ui-modal" id="cyclopedia-modal">
+        <div class="ui-modal-content">
+            <button class="ui-modal-close" id="cyclopedia-close">&times;</button>
+            
+            <!-- 头部区域 -->
+            <div class="cyclopedia-header">
+                <h2><i class="fas fa-book-open"></i> NPC 图鉴系统</h2>
+                <p>
+                    记录你在诡秘世界中遇到的所有非凡者同伴。收集不同稀有度的NPC，了解他们的成长曲线和团队加成，
+                    组建最适合你战斗风格的团队组合。
+                </p>
+            </div>
+            
+            <!-- 统计面板 -->
+            <div class="stats-panel">
+                <div class="stat-card total">
+                    <div class="stat-value" id="total-npcs">32</div>
+                    <div class="stat-label">总NPC数量</div>
+                </div>
+                
+                <div class="stat-card recruited">
+                    <div class="stat-value" id="recruited-npcs">3</div>
+                    <div class="stat-label">已招募</div>
+                </div>
+                
+                <div class="stat-card available">
+                    <div class="stat-value" id="available-npcs">20</div>
+                    <div class="stat-label">可招募</div>
+                </div>
+                
+                <div class="stat-card legendary">
+                    <div class="stat-value" id="legendary-npcs">4</div>
+                    <div class="stat-label">传说级</div>
+                </div>
+            </div>
+            
+            <!-- 过滤和搜索 -->
+            <div class="filters-panel">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label class="filter-label">稀有度:</label>
+                        <select class="ui-select" id="filter-rarity">
+                            <option value="all">全部</option>
+                            <option value="common">普通</option>
+                            <option value="uncommon">罕见</option>
+                            <option value="rare">稀有</option>
+                            <option value="epic">史诗</option>
+                            <option value="legendary">传说</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">状态:</label>
+                        <select class="ui-select" id="filter-status">
+                            <option value="all">全部</option>
+                            <option value="recruited">已招募</option>
+                            <option value="available">可招募</option>
+                            <option value="unavailable">条件不足</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">途径:</label>
+                        <select class="ui-select" id="filter-pathway">
+                            <option value="all">全部途径</option>
+                            <option value="水手">水手</option>
+                            <option value="观众">观众</option>
+                            <option value="太阳">太阳</option>
+                            <option value="门">门</option>
+                            <option value="黑皇帝">黑皇帝</option>
+                            <option value="红祭司">红祭司</option>
+                            <option value="魔女">魔女</option>
+                            <option value="死神">死神</option>
+                            <option value="猎人">猎人</option>
+                            <option value="审判者">审判者</option>
+                            <option value="命运之轮">命运之轮</option>
+                            <option value="隐者">隐者</option>
+                            <option value="恶魔">恶魔</option>
+                            <option value="月亮">月亮</option>
+                            <option value="黄昏巨人">黄昏巨人</option>
+                            <option value="仲裁人">仲裁人</option>
+                            <option value="错误">错误</option>
+                            <option value="母亲">母亲</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <button class="clear-filters-btn" id="clear-filters-btn">
+                            <i class="fas fa-times"></i> 清除筛选
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="filter-row">
+                    <div class="filter-group" style="flex: 1;">
+                        <label class="filter-label">搜索:</label>
+                        <input type="text" class="ui-input" id="search-input" 
+                               placeholder="搜索NPC名称、描述、能力...">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- NPC网格 -->
+            <div class="npcs-grid" id="npcs-grid">
+                <!-- NPC条目将动态生成 -->
+            </div>
+            
+            <!-- 图鉴完成度 -->
+            <div class="completion-panel">
+                <div class="completion-title">图鉴收集进度</div>
+                
+                <div class="completion-bar">
+                    <div class="completion-fill" id="completion-fill" style="width: 9.375%;"></div>
+                </div>
+                
+                <div class="completion-text">
+                    当前进度: <span class="completion-percentage" id="completion-percentage">9.375%</span>
+                    (已招募 <span id="display-recruited">3</span> / 总数 <span id="display-total">32</span>)
+                </div>
+                
+                <div class="completion-text" style="margin-top: 15px;">
+                    稀有度收集: 
+                    <span style="color: #4caf50;">罕见 6</span> · 
+                    <span style="color: #2196f3;">稀有 8</span> · 
+                    <span style="color: #9c27b0;">史诗 6</span> · 
+                    <span style="color: #ffc107;">传说 4</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// NPC图鉴管理器
+class NPCyclopediaManager {
+    constructor() {
+        this.npcs = [];
+        this.filteredNPCs = [];
+        this.filters = {
+            rarity: 'all',
+            status: 'all',
+            pathway: 'all',
+            search: ''
+        };
+        
+        this.bindEvents();
+        this.loadNPCs();
+    }
+    
+    bindEvents() {
+        // 关闭按钮
+        document.getElementById('cyclopedia-close').addEventListener('click', () => {
+            document.getElementById('cyclopedia-modal').style.display = 'none';
+        });
+        
+        // 过滤器
+        document.getElementById('filter-rarity').addEventListener('change', (e) => {
+            this.filters.rarity = e.target.value;
+            this.applyFilters();
+        });
+        
+        document.getElementById('filter-status').addEventListener('change', (e) => {
+            this.filters.status = e.target.value;
+            this.applyFilters();
+        });
+        
+        document.getElementById('filter-pathway').addEventListener('change', (e) => {
+            this.filters.pathway = e.target.value;
+            this.applyFilters();
+        });
+        
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            this.filters.search = e.target.value.toLowerCase();
+            this.applyFilters();
+        });
+        
+        // 清除筛选按钮
+        document.getElementById('clear-filters-btn').addEventListener('click', () => {
+            this.clearFilters();
+        });
+    }
+    
+    async loadNPCs() {
+        try {
+            const response = await fetch('data/npcs.json');
+            if (!response.ok) {
+                throw new Error('无法加载NPC数据');
+            }
+            
+            const data = await response.json();
+            this.npcs = data.npcs || [];
+            
+            // 从游戏状态加载实际状态（这里简化处理）
+            this.loadNPCStatusFromGameState();
+            
+            this.renderAll();
+            
+        } catch (error) {
+            console.error('加载NPC数据失败:', error);
+            // 使用备用数据
+            this.loadFallbackData();
+        }
+    }
+    
+    loadNPCStatusFromGameState() {
+        // 这里应该从游戏状态加载NPC的实际状态
+        // 暂时使用初始状态，但可以模拟一些变化
+        
+        this.npcs.forEach(npc => {
+            // 从localStorage或游戏状态获取实际状态
+            const savedStatus = localStorage.getItem(`npc_status_${npc.id}`);
+            if (savedStatus) {
+                npc.currentStatus = savedStatus;
+            } else {
+                npc.currentStatus = npc.initial_status || 'unavailable';
+            }
+            
+            // 模拟一些已招募的NPC
+            if (npc.id === 'npc_001' || npc.id === 'npc_003') {
+                npc.currentStatus = 'recruited';
+            }
+            
+            // 模拟一些可招募的NPC（除了上面两个）
+            if (npc.currentStatus === 'unavailable' && Math.random() > 0.5) {
+                npc.currentStatus = 'available';
+            }
+        });
+    }
+    
+    loadFallbackData() {
+        // 备用数据，如果无法加载文件
+        this.npcs = [
+            {
+                id: 'npc_001',
+                name: '阿尔杰·威尔逊',
+                pathway: '水手',
+                sequence: '序列6',
+                rarity: 'rare',
+                avatar: '🧙',
+                description: '前海盗船长，现为风暴教会的代罚者。性格谨慎，经验丰富，擅长海上战斗和风暴操控。',
+                stats: {
+                    strength: 85,
+                    constitution: 78,
+                    agility: 65,
+                    intelligence: 72,
+                    perception: 80,
+                    charisma: 68
+                },
+                currentStatus: 'recruited',
+                growth_curve: 'balanced'
+            },
+            {
+                id: 'npc_002',
+                name: '奥黛丽·霍尔',
+                pathway: '观众',
+                sequence: '序列7',
+                rarity: 'epic',
+                avatar: '👑',
+                description: '贵族小姐，观众途径非凡者。擅长心理分析和社交操控，能够提供情报支持和团队增益。',
+                stats: {
+                    strength: 55,
+                    constitution: 60,
+                    agility: 70,
+                    intelligence: 90,
+                    perception: 95,
+                    charisma: 85
+                },
+                currentStatus: 'unavailable',
+                growth_curve: 'intelligence_focus'
+            }
+        ];
+    }
+    
+    applyFilters() {
+        this.filteredNPCs = this.npcs.filter(npc => {
+            // 稀有度过滤
+            if (this.filters.rarity !== 'all' && npc.rarity !== this.filters.rarity) {
+                return false;
+            }
+            
+            // 状态过滤
+            if (this.filters.status !== 'all' && npc.currentStatus !== this.filters.status) {
+                return false;
+            }
+            
+            // 途径过滤
+            if (this.filters.pathway !== 'all' && npc.pathway !== this.filters.pathway) {
+                return false;
+            }
+            
+            // 搜索过滤
+            if (this.filters.search) {
+                const searchText = this.filters.search;
+                const searchable = `${npc.name} ${npc.pathway} ${npc.sequence} ${npc.description} ${npc.growth_curve || ''}`.toLowerCase();
+                if (!searchable.includes(searchText)) {
+                    return false;
+                }
+            }
+            
+            return true;
+        });
+        
+        this.renderNPCGrid();
+    }
+    
+    clearFilters() {
+        this.filters = {
+            rarity: 'all',
+            status: 'all',
+            pathway: 'all',
+            search: ''
+        };
+        
+        document.getElementById('filter-rarity').value = 'all';
+        document.getElementById('filter-status').value = 'all';
+        document.getElementById('filter-pathway').value = 'all';
+        document.getElementById('search-input').value = '';
+        
+        this.applyFilters();
+    }
+    
+    renderAll() {
+        this.updateStatistics();
+        this.applyFilters();
+        this.updateCompletion();
+    }
+    
+    updateStatistics() {
+        const total = this.npcs.length;
+        const recruited = this.npcs.filter(npc => npc.currentStatus === 'recruited').length;
+        const available = this.npcs.filter(npc => npc.currentStatus === 'available').length;
+        const legendary = this.npcs.filter(npc => npc.rarity === 'legendary').length;
+        
+        document.getElementById('total-npcs').textContent = total;
+        document.getElementById('recruited-npcs').textContent = recruited;
+        document.getElementById('available-npcs').textContent = available;
+        document.getElementById('legendary-npcs').textContent = legendary;
+    }
+    
+    renderNPCGrid() {
+        const container = document.getElementById('npcs-grid');
+        container.innerHTML = '';
+        
+        if (this.filteredNPCs.length === 0) {
+            container.innerHTML = `
+                <div class="no-results" style="grid-column: 1 / -1; text-align: center; padding: 50px; color: var(--text-secondary);">
+                    <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                    <h3 style="margin-bottom: 10px;">未找到符合条件的NPC</h3>
+                    <p>尝试调整筛选条件或搜索关键词</p>
+                </div>
+            `;
+            return;
+        }
+        
+        this.filteredNPCs.forEach(npc => {
+            const entry = this.createNPCEntry(npc);
+            container.appendChild(entry);
+        });
+    }
+    
+    createNPCEntry(npc) {
+        const entry = document.createElement('div');
+        entry.className = `npc-entry ${npc.rarity}`;
+        
+        // 状态文本映射
+        const statusTexts = {
+            'recruited': '已招募',
+            'available': '可招募',
+            'unavailable': '条件不足'
+        };
+        
+        const statusColors = {
+            'recruited': 'var(--state-success)',
+            'available': 'var(--state-info)',
+            'unavailable': 'var(--state-danger)'
+        };
+        
+        // 生成属性列表HTML
+        let attributesHtml = '';
+        if (npc.stats) {
+            const stats = npc.stats;
+            const attributes = [
+                { label: '力量', value: stats.strength },
+                { label: '体质', value: stats.constitution },
+                { label: '敏捷', value: stats.agility },
+                { label: '智力', value: stats.intelligence },
+                { label: '感知', value: stats.perception },
+                { label: '魅力', value: stats.charisma }
+            ];
+            
+            attributesHtml = '<div class="attributes-grid">';
+            attributes.forEach(attr => {
+                attributesHtml += `
+                    <div class="attribute-item">
+                        <div class="attribute-label">${attr.label}</div>
+                        <div class="attribute-value">${attr.value}</div>
+                    </div>
+                `;
+            });
+            attributesHtml += '</div>';
+        }
+        
+        entry.innerHTML = `
+            <div class="status-indicator ${npc.currentStatus === 'recruited' ? 'status-recruited' : 
+                                         npc.currentStatus === 'available' ? 'status-available' : 'status-unavailable'}"
+                 style="background-color: ${statusColors[npc.currentStatus]};">
+                ${statusTexts[npc.currentStatus]}
+            </div>
+            
+            <div class="entry-header">
+                <span class="npc-avatar-large">${npc.avatar}</span>
+                <div class="entry-name">${npc.name}</div>
+                <div class="entry-details">${npc.pathway} · ${npc.sequence}</div>
+            </div>
+            
+            <div class="entry-content">
+                <div class="entry-description">${npc.description}</div>
+                ${attributesHtml}
+                
+                ${npc.growth_curve ? `
+                <div class="growth-curve">
+                    <div class="growth-label">成长曲线: ${npc.growth_curve}</div>
+                    <div class="growth-description">
+                        ${this.getGrowthCurveDescription(npc.growth_curve)}
+                    </div>
+                </div>
+                ` : ''}
+            </div>
+        `;
+        
+        // 点击事件
+        entry.addEventListener('click', () => {
+            this.showNPCDetail(npc);
+        });
+        
+        return entry;
+    }
+    
+    getGrowthCurveDescription(curve) {
+        const descriptions = {
+            'balanced': '所有属性均衡成长，适合多种战斗风格',
+            'attack_focus': '攻击力成长速度是其他属性的1.5倍，追求极致输出',
+            'defense_focus': '防御力和生命值成长速度是其他属性的1.5倍，生存能力强',
+            'agility_focus': '敏捷和速度成长速度是其他属性的1.5倍，擅长先手和闪避',
+            'intelligence_focus': '智力和感知成长速度是其他属性的1.5倍，魔法和辅助效果强',
+            'power_focus': '力量和体质成长速度是其他属性的1.5倍，物理攻击和生存平衡',
+            'support_focus': '智力和魅力成长速度是其他属性的1.5倍，团队增益效果显著'
+        };
+        
+        return descriptions[curve] || '标准成长模式';
+    }
+    
+    showNPCDetail(npc) {
+        // 这里可以打开详细面板，显示更多信息
+        // 暂时使用简单提示
+        const detailInfo = `
+            NPC: ${npc.name}
+            途径: ${npc.pathway}
+            序列: ${npc.sequence}
+            稀有度: ${npc.rarity}
+            状态: ${npc.currentStatus}
+            描述: ${npc.description}
+        `;
+        
+        if (npc.currentStatus === 'available') {
+            if (confirm(`${npc.name} - 可招募\n\n是否前往招募？`)) {
+                // 打开招募界面
+                this.openRecruitmentForNPC(npc.id);
+            }
+        } else {
+            alert(detailInfo);
+        }
+    }
+    
+    openRecruitmentForNPC(npcId) {
+        // 这里应该打开NPC招募界面，并聚焦到指定NPC
+        // 暂时使用模拟
+        console.log(`打开NPC招募界面: ${npcId}`);
+        alert(`正在打开 ${npcId} 的招募界面...`);
+        
+        // 实际应该这样做：
+        // 1. 打开招募模态框
+        // 2. 自动选择指定NPC
+        // 3. 显示详细信息
+    }
+    
+    updateCompletion() {
+        const recruited = this.npcs.filter(npc => npc.currentStatus === 'recruited').length;
+        const total = this.npcs.length;
+        const percentage = (recruited / total * 100).toFixed(3);
+        
+        document.getElementById('completion-fill').style.width = `${percentage}%`;
+        document.getElementById('completion-percentage').textContent = `${percentage}%`;
+        document.getElementById('display-recruited').textContent = recruited;
+        document.getElementById('display-total').textContent = total;
+    }
+}
+
+// 当组件加载时初始化图鉴管理器
+document.addEventListener('DOMContentLoaded', () => {
+    window.npcyclopediaManager = new NPCyclopediaManager();
+});
+</script>

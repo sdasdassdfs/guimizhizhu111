@@ -1,0 +1,31 @@
+{
+  "id": "skill_tidal_wave",
+  "name": "潮汐冲击",
+  "description": "水手途径攻击技能。召唤汹涌潮汐冲击单个敌人，造成水系伤害并有一定概率击退敌人行动条。",
+  "pathway": "水手",
+  "sequenceRequirement": "7",
+  "type": "attack",
+  "target": "single",
+  "spiritCost": 45,
+  "cooldownTurns": 3,
+  "durationTurns": 0,
+  "effects": [
+    {
+      "type": "damage",
+      "value": 180,
+      "element": "water",
+      "description": "造成180点水系伤害"
+    },
+    {
+      "type": "knockback",
+      "value": 0.3,
+      "description": "30%概率击退敌人行动条25%"
+    }
+  ],
+  "animation": "tidal_wave",
+  "icon": "🌊",
+  "damageFormula": "base_damage * (1 + water_mastery * 0.01)",
+  "healFormula": null,
+  "isAOE": false,
+  "unlockCondition": "水手序列7以上"
+}

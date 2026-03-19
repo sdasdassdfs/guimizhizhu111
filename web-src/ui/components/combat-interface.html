@@ -1,0 +1,517 @@
+<div class="ui-container combat-container" id="combat-container">
+    <style>
+        /* ATB战斗系统专用样式 */
+        .atb-container {
+            margin: 20px 0;
+            padding: 15px;
+            background: linear-gradient(135deg, #0a0a1a, #1a1a2e);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            border: 1px solid #6a0dad;
+        }
+        .atb-container h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            font-family: 'Cinzel', serif;
+            border-bottom: 2px solid #6a0dad;
+            padding-bottom: 8px;
+        }
+        .atb-team-section {
+            margin-bottom: 20px;
+        }
+        .atb-team-section h4 {
+            color: #ffffff;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            padding-left: 5px;
+        }
+        .atb-character-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .atb-bar {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .atb-bar:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #ffd700;
+        }
+        .atb-character-info {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-right: 15px;
+        }
+        .atb-name {
+            color: #ffffff;
+            font-weight: bold;
+        }
+        .atb-hp {
+            color: #2ecc71;
+            font-size: 0.85rem;
+        }
+        .atb-progress-container {
+            flex: 2;
+            height: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+        .atb-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ff9900);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+        .atb-status {
+            flex: 1;
+            text-align: center;
+            color: #cccccc;
+            font-size: 0.85rem;
+            padding: 5px 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            margin-left: 15px;
+        }
+        /* 位置网格 */
+        .position-grid-container {
+            margin: 20px 0;
+            padding: 15px;
+            background: linear-gradient(135deg, #0a0a1a, #1a1a2e);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            border: 1px solid #1e90ff;
+        }
+        .position-grid-container h3 {
+            color: #1e90ff;
+            margin-bottom: 15px;
+            font-family: 'Cinzel', serif;
+            border-bottom: 2px solid #1e90ff;
+            padding-bottom: 8px;
+        }
+        .position-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .position-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .position-cell {
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .position-cell:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #ffd700;
+        }
+        .position-cell.occupied {
+            background: rgba(30, 144, 255, 0.1);
+            border: 2px solid #1e90ff;
+        }
+        .position-cell.drag-over {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: #ffd700;
+        }
+        .position-character {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            color: #ffffff;
+        }
+        .position-character i {
+            font-size: 1.5rem;
+            color: #1e90ff;
+        }
+        /* 合击容器 */
+        .combo-container {
+            margin: 20px 0;
+            padding: 15px;
+            background: linear-gradient(135deg, #0a0a1a, #1a1a2e);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            border: 1px solid #8b0000;
+        }
+        .combo-container h3 {
+            color: #8b0000;
+            margin-bottom: 15px;
+            font-family: 'Cinzel', serif;
+            border-bottom: 2px solid #8b0000;
+            padding-bottom: 8px;
+        }
+        .combo-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .combo-btn {
+            flex: 1;
+            min-width: 150px;
+            padding: 12px;
+            background: rgba(139, 0, 0, 0.2);
+            border: 1px solid #8b0000;
+            border-radius: 8px;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .combo-btn:hover {
+            background: rgba(139, 0, 0, 0.4);
+            transform: translateY(-2px);
+        }
+        .combo-energy {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .energy-bar {
+            flex: 1;
+            height: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .energy-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2ecc71, #2ecc71);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+    </style>
+    <div class="ui-modal" id="combat-modal">
+        <div class="ui-modal-content">
+            <button class="ui-modal-close" id="combat-close">&times;</button>
+            <h2><i class="fas fa-fist-raised"></i> 非凡战斗</h2>
+            <p class="subtitle">运用你的非凡能力与敌人战斗，注意灵性消耗和理智保持。</p>
+            
+            <!-- ATB行动条区域 -->
+            <div class="atb-container" id="atb-container" style="display: none;">
+                <h3><i class="fas fa-tachometer-alt"></i> 行动条</h3>
+                <div class="atb-bars" id="atb-bars">
+                    <!-- 玩家队伍行动条 -->
+                    <div class="atb-team-section">
+                        <h4>我方队伍</h4>
+                        <div class="atb-character-list" id="atb-player-list">
+                            <!-- 动态生成 -->
+                        </div>
+                    </div>
+                    
+                    <!-- 敌方队伍行动条 -->
+                    <div class="atb-team-section">
+                        <h4>敌方队伍</h4>
+                        <div class="atb-character-list" id="atb-enemy-list">
+                            <!-- 动态生成 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 团队位置网格 -->
+            <div class="position-grid-container" id="position-grid-container" style="display: none;">
+                <h3><i class="fas fa-th-large"></i> 团队阵型</h3>
+                <div class="position-grid" id="position-grid">
+                    <!-- 3x3网格，动态填充 -->
+                    <div class="position-row front-row">
+                        <div class="position-cell front-left" data-row="front" data-col="left"></div>
+                        <div class="position-cell front-center" data-row="front" data-col="center"></div>
+                        <div class="position-cell front-right" data-row="front" data-col="right"></div>
+                    </div>
+                    <div class="position-row middle-row">
+                        <div class="position-cell middle-left" data-row="middle" data-col="left"></div>
+                        <div class="position-cell middle-center" data-row="middle" data-col="center"></div>
+                        <div class="position-cell middle-right" data-row="middle" data-col="right"></div>
+                    </div>
+                    <div class="position-row back-row">
+                        <div class="position-cell back-left" data-row="back" data-col="left"></div>
+                        <div class="position-cell back-center" data-row="back" data-col="center"></div>
+                        <div class="position-cell back-right" data-row="back" data-col="right"></div>
+                    </div>
+                </div>
+                <div class="position-info" id="position-info">
+                    <p>剩余调整次数: <span id="remaining-adjustments">3</span></p>
+                    <p class="hint"><i class="fas fa-info-circle"></i> 提示: 拖动角色图标调整位置，不同位置影响技能效果</p>
+                </div>
+            </div>
+            
+            <!-- 合击提示区域 -->
+            <div class="combo-container" id="combo-container" style="display: none;">
+                <h3><i class="fas fa-users"></i> 合击技能</h3>
+                <div class="combo-skills" id="combo-skills">
+                    <!-- 动态生成可用合击 -->
+                </div>
+                <div class="combo-energy">
+                    <span>团队能量: </span>
+                    <div class="energy-bar">
+                        <div class="energy-fill" id="energy-fill" style="width: 0%"></div>
+                    </div>
+                    <span id="energy-text">0/100</span>
+                </div>
+            </div>
+            
+            <div class="combat-stage">
+                <div class="combatant player active" id="player-combatant">
+                    <div class="combatant-name">
+                        <i class="fas fa-user"></i> <span id="player-name">占卜家</span>
+                    </div>
+                    <div class="combatant-level">序列9</div>
+                    
+                    <div class="health-bar">
+                        <div class="health-fill" id="player-health" style="width: 85%"></div>
+                    </div>
+                    <div class="health-text">
+                        <span id="player-hp-text">85/100</span> 生命值
+                    </div>
+                    
+                    <div class="spirit-bar">
+                        <div class="spirit-fill" id="player-spirit" style="width: 60%"></div>
+                    </div>
+                    <div class="spirit-text">
+                        <span id="player-spirit-text">60/100</span> 灵性值
+                    </div>
+                    
+                    <div class="sanity-bar">
+                        <div class="sanity-fill" id="player-sanity" style="width: 90%"></div>
+                    </div>
+                    <div class="sanity-text">
+                        <span id="player-sanity-text">90/100</span> 理智值
+                    </div>
+                    
+                    <div class="combat-status">
+                        <div class="status-effect positive">
+                            <i class="fas fa-shield-alt"></i> 灵性护盾
+                        </div>
+                        <div class="status-effect negative">
+                            <i class="fas fa-tint"></i> 流血
+                        </div>
+                        <div class="status-effect negative">
+                            <i class="fas fa-brain"></i> 疯狂
+                        </div>
+                        <div class="status-effect negative">
+                            <i class="fas fa-biohazard"></i> 污染
+                        </div>
+                        <div class="status-effect negative">
+                            <i class="fas fa-eye"></i> 神性侵蚀
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="combat-vs">
+                    <div class="vs-circle">VS</div>
+                    <div class="round-counter">第 <span id="round-number">1</span> 回合</div>
+                </div>
+                
+                <div class="combatant enemy" id="enemy-combatant">
+                    <div class="combatant-name">
+                        <i class="fas fa-skull"></i> <span id="enemy-name">失控的非凡者</span>
+                    </div>
+                    <div class="combatant-level">序列9（失控）</div>
+                    
+                    <div class="health-bar">
+                        <div class="health-fill" id="enemy-health" style="width: 70%"></div>
+                    </div>
+                    <div class="health-text">
+                        <span id="enemy-hp-text">70/100</span> 生命值
+                    </div>
+                    
+                    <div class="spirit-bar">
+                        <div class="spirit-fill" id="enemy-spirit" style="width: 40%"></div>
+                    </div>
+                    <div class="spirit-text">
+                        <span id="enemy-spirit-text">40/100</span> 灵性值
+                    </div>
+                    
+                    <div class="sanity-bar">
+                        <div class="sanity-fill" id="enemy-sanity" style="width: 20%"></div>
+                    </div>
+                    <div class="sanity-text">
+                        <span id="enemy-sanity-text">20/100</span> 理智值
+                    </div>
+                    
+                    <div class="combat-status">
+                        <div class="status-effect negative">
+                            <i class="fas fa-brain"></i> 疯狂
+                        </div>
+                        <div class="status-effect negative">
+                            <i class="fas fa-biohazard"></i> 污染
+                        </div>
+                        <div class="status-effect negative">
+                            <i class="fas fa-eye"></i> 神性侵蚀
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="combat-skills" id="combat-skills">
+                <h3>可用技能</h3>
+                <div class="skills-grid">
+                    <button class="skill-btn" data-skill-id="basic_attack" data-cost="5">
+                        <i class="fas fa-crosshairs"></i>
+                        <span class="skill-name">灵性射击</span>
+                        <span class="skill-desc">基础攻击，造成灵性伤害</span>
+                        <span class="skill-cost">消耗: 5灵性</span>
+                    </button>
+                    
+                    <button class="skill-btn" data-skill-id="divination" data-cost="15">
+                        <i class="fas fa-crystal-ball"></i>
+                        <span class="skill-name">危险预知</span>
+                        <span class="skill-desc">预知敌人下回合行动，获得闪避加成</span>
+                        <span class="skill-cost">消耗: 15灵性</span>
+                    </button>
+                    
+                    <button class="skill-btn" data-skill-id="spirit_shield" data-cost="20">
+                        <i class="fas fa-shield-alt"></i>
+                        <span class="skill-name">灵性护盾</span>
+                        <span class="skill-desc">生成护盾吸收下回合伤害</span>
+                        <span class="skill-cost">消耗: 20灵性</span>
+                    </button>
+                    
+                    <button class="skill-btn" data-skill-id="fate_twist" data-cost="30" data-cooldown="3">
+                        <i class="fas fa-random"></i>
+                        <span class="skill-name">命运干扰</span>
+                        <span class="skill-desc">干扰敌人命运，使其下回合攻击可能失败</span>
+                        <span class="skill-cost">消耗: 30灵性</span>
+                    </button>
+                    
+                    <button class="skill-btn" data-skill-id="heal" data-cost="25">
+                        <i class="fas fa-heart"></i>
+                        <span class="skill-name">灵性治愈</span>
+                        <span class="skill-desc">恢复生命值，同时消耗理智</span>
+                        <span class="skill-cost">消耗: 25灵性</span>
+                    </button>
+                    
+                    <button class="skill-btn" data-skill-id="ultimate" data-cost="50" data-cooldown="5">
+                        <i class="fas fa-crown"></i>
+                        <span class="skill-name">愚弄命运</span>
+                        <span class="skill-desc">终极技能，造成大量伤害并附加混乱效果</span>
+                        <span class="skill-cost">消耗: 50灵性</span>
+                    </button>
+                    
+                    <button class="skill-btn" data-skill-id="fate_prediction" data-cost="40">
+                        <i class="fas fa-crystal-ball"></i>
+                        <span class="skill-name">命运预知</span>
+                        <span class="skill-desc">预知敌人行动，提升闪避</span>
+                        <span class="skill-cost">消耗: 40灵性</span>
+                    </button>
+                    
+                    <button class="skill-btn" data-skill-id="time_reversal" data-cost="80">
+                        <i class="fas fa-clock"></i>
+                        <span class="skill-name">时间逆转</span>
+                        <span class="skill-desc">恢复上回合状态，清除负面效果</span>
+                        <span class="skill-cost">消耗: 80灵性</span>
+                    </button>
+                    
+                    <button class="skill-btn" data-skill-id="berserk_rage" data-cost="35">
+                        <i class="fas fa-fist-raised"></i>
+                        <span class="skill-name">狂暴之怒</span>
+                        <span class="skill-desc">提升攻击，免疫恐惧</span>
+                        <span class="skill-cost">消耗: 35灵性</span>
+                    </button>
+                    
+                    <button class="skill-btn" data-skill-id="iron_will" data-cost="50">
+                        <i class="fas fa-shield-alt"></i>
+                        <span class="skill-name">钢铁意志</span>
+                        <span class="skill-desc">提升防御，提供护盾</span>
+                        <span class="skill-cost">消耗: 50灵性</span>
+                    </button>
+                    
+                    <button class="skill-btn" data-skill-id="tidal_wave" data-cost="45">
+                        <i class="fas fa-water"></i>
+                        <span class="skill-name">潮汐冲击</span>
+                        <span class="skill-desc">水系伤害，可能击退</span>
+                        <span class="skill-cost">消耗: 45灵性</span>
+                    </button>
+                    
+                    <button class="skill-btn" data-skill-id="deep_whisper" data-cost="60">
+                        <i class="fas fa-comment-dots"></i>
+                        <span class="skill-name">深海低语</span>
+                        <span class="skill-desc">使敌人混乱，攻击随机目标</span>
+                        <span class="skill-cost">消耗: 60灵性</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="combat-log" id="combat-log">
+                <h3>战斗日志</h3>
+                <div class="log-entries">
+                    <div class="log-entry system">
+                        <span class="log-time">00:01</span>
+                        <span class="log-text">战斗开始！你遭遇了失控的非凡者。</span>
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-time">00:02</span>
+                        <span class="log-text">你使用了<strong>灵性射击</strong>，造成15点伤害。</span>
+                    </div>
+                    <div class="log-entry damage">
+                        <span class="log-time">00:03</span>
+                        <span class="log-text">失控的非凡者对你使用了<strong>疯狂撕咬</strong>，造成12点伤害。</span>
+                    </div>
+                    <div class="log-entry">
+                        <span class="log-time">00:04</span>
+                        <span class="log-text">你使用了<strong>危险预知</strong>，预知了敌人的下一步行动。</span>
+                    </div>
+                    <div class="log-entry heal">
+                        <span class="log-time">00:05</span>
+                        <span class="log-text">失控的非凡者恢复了10点生命值（失控特性）。</span>
+                </div>
+                </div>
+            </div>
+            
+            <div class="combat-controls">
+                <button class="btn-primary" id="execute-turn">
+                    <i class="fas fa-forward"></i> 执行回合
+                </button>
+                <button class="btn-secondary" id="flee-combat">
+                    <i class="fas fa-running"></i> 尝试逃脱
+                </button>
+                <button class="btn-secondary" id="auto-combat">
+                    <i class="fas fa-robot"></i> 自动战斗
+                </button>
+                <button class="btn-secondary" id="combat-help">
+                    <i class="fas fa-question-circle"></i> 战斗帮助
+                </button>
+            </div>
+            
+            <div class="combat-tutorial" id="combat-tutorial" style="display: none;">
+                <h4><i class="fas fa-graduation-cap"></i> 战斗系统说明</h4>
+                <div class="tutorial-content">
+                    <p>《诡秘之主》的战斗系统基于非凡能力对抗，核心机制：</p>
+                    <ul>
+                        <li><strong>生命值</strong>：降为0则战斗失败</li>
+                        <li><strong>灵性值</strong>：使用技能消耗，每回合自动恢复少量</li>
+                        <li><strong>理智值</strong>：使用某些能力或受到精神攻击会降低，过低可能引发失控</li>
+                        <li><strong>序列克制</strong>：不同途径存在克制关系，影响伤害效果</li>
+                        <li><strong>状态效果</strong>：增益/减益效果持续数回合</li>
+                    </ul>
+                    <p>战斗策略：根据敌人类型选择合适的技能序列，注意灵性管理和理智保持。</p>
+                </div>
+                <button class="btn-secondary" id="close-tutorial">关闭说明</button>
+            </div>
+        </div>
+    </div>
+</div>

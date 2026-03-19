@@ -1,0 +1,35 @@
+{
+  "id": "skill_berserk_rage",
+  "name": "狂暴之怒",
+  "description": "战士途径专属技能。进入狂暴状态，大幅提升攻击力但降低防御力，持续期间免疫恐惧和震慑效果。",
+  "pathway": "战士",
+  "sequenceRequirement": "7",
+  "type": "buff",
+  "target": "self",
+  "spiritCost": 35,
+  "cooldownTurns": 5,
+  "durationTurns": 3,
+  "effects": [
+    {
+      "type": "attackBoost",
+      "value": 0.6,
+      "description": "攻击力提升60%"
+    },
+    {
+      "type": "defenseReduction",
+      "value": 0.3,
+      "description": "防御力降低30%"
+    },
+    {
+      "type": "immunity",
+      "value": ["fear", "stun"],
+      "description": "免疫恐惧和震慑"
+    }
+  ],
+  "animation": "berserk",
+  "icon": "⚔️",
+  "damageFormula": null,
+  "healFormula": null,
+  "isAOE": false,
+  "unlockCondition": "战士序列7以上"
+}

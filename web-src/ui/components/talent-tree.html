@@ -1,0 +1,731 @@
+<div class="ui-container talent-container" id="talent-container">
+    <style>
+        /* 天赋树专用样式 */
+        .talent-tree-container {
+            margin: 20px 0;
+            padding: 15px;
+            background: var(--gradient-dark);
+            border-radius: 12px;
+            box-shadow: var(--shadow-deep);
+            border: 1px solid var(--pathway-purple);
+            position: relative;
+            min-height: 600px;
+            overflow: auto;
+        }
+
+        .talent-tree-container h3 {
+            color: var(--pathway-gold);
+            margin-bottom: 15px;
+            font-family: 'Cinzel', serif;
+            border-bottom: 2px solid var(--pathway-purple);
+            padding-bottom: 8px;
+        }
+
+        /* 天赋树画布 */
+        .talent-tree-canvas {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            background: rgba(10, 10, 26, 0.7);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(106, 13, 173, 0.3);
+        }
+
+        /* 天赋节点 */
+        .talent-node {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            border: 3px solid;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .talent-node:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+        }
+
+        .talent-node.active {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px currentColor;
+        }
+
+        /* 节点类型颜色 */
+        .talent-node[data-type="combat"] {
+            border-color: #8B4513;
+            background: linear-gradient(135deg, rgba(139, 69, 19, 0.3), rgba(101, 67, 33, 0.7));
+        }
+
+        .talent-node[data-type="utility"] {
+            border-color: #2E8B57;
+            background: linear-gradient(135deg, rgba(46, 139, 87, 0.3), rgba(34, 139, 34, 0.7));
+        }
+
+        .talent-node[data-type="pathway"] {
+            border-color: #8B0000;
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.3), rgba(128, 0, 0, 0.7));
+        }
+
+        .talent-node[data-type="team"] {
+            border-color: #4682B4;
+            background: linear-gradient(135deg, rgba(70, 130, 180, 0.3), rgba(65, 105, 225, 0.7));
+        }
+
+        .talent-node[data-type="skill_enhancement"] {
+            border-color: #9370DB;
+            background: linear-gradient(135deg, rgba(147, 112, 219, 0.3), rgba(138, 43, 226, 0.7));
+        }
+
+        /* 节点解锁状态 */
+        .talent-node.locked {
+            filter: grayscale(80%);
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .talent-node.unlocked {
+            border-style: solid;
+        }
+
+        .talent-node.activated {
+            border-width: 4px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+        }
+
+        /* 节点图标 */
+        .talent-node-icon {
+            font-size: 1.5rem;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* 节点连接线 */
+        .talent-connection {
+            position: absolute;
+            height: 4px;
+            background: linear-gradient(90deg, var(--pathway-gold), #b8860b);
+            border-radius: 2px;
+            transform-origin: 0 0;
+            z-index: 1;
+        }
+
+        /* 天赋点信息 */
+        .talent-points-info {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .talent-points-info h4 {
+            color: var(--pathway-gold);
+            margin-bottom: 10px;
+        }
+
+        .talent-points-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .talent-points-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .talent-points-value {
+            color: var(--state-success);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* 天赋预览面板 */
+        .talent-preview-panel {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--pathway-purple);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            min-height: 200px;
+            display: none;
+        }
+
+        .talent-preview-panel.active {
+            display: block;
+        }
+
+        .talent-preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--pathway-purple);
+            padding-bottom: 10px;
+        }
+
+        .talent-preview-name {
+            color: var(--pathway-gold);
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .talent-preview-type {
+            background: rgba(106, 13, 173, 0.3);
+            color: var(--accent-purple);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .talent-preview-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .talent-preview-effects {
+            background: rgba(10, 10, 26, 0.5);
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid var(--pathway-gold);
+        }
+
+        .talent-preview-effects h5 {
+            color: var(--pathway-gold);
+            margin-bottom: 10px;
+        }
+
+        .talent-effect-item {
+            color: var(--text-secondary);
+            margin: 8px 0;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .talent-effect-item:before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            color: var(--state-success);
+        }
+
+        /* 天赋点分配控制 */
+        .talent-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .talent-assign-btn {
+            background: linear-gradient(135deg, var(--state-success), #27ae60);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .talent-assign-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            transform: translateY(-2px);
+        }
+
+        .talent-assign-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .talent-respec-btn {
+            background: linear-gradient(135deg, var(--state-warning), #e67e22);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .talent-respec-btn:hover {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            transform: translateY(-2px);
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .talent-tree-canvas {
+                height: 400px;
+            }
+
+            .talent-node {
+                width: 60px;
+                height: 60px;
+            }
+
+            .talent-node-icon {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+
+    <div class="ui-modal" id="talent-modal">
+        <div class="ui-modal-content">
+            <button class="ui-modal-close" id="talent-close">&times;</button>
+            <h2><i class="fas fa-sitemap"></i> 天赋树系统</h2>
+            <p class="subtitle">选择你的非凡成长路径，激活天赋节点获得强大能力</p>
+
+            <!-- 天赋点信息 -->
+            <div class="talent-points-info">
+                <h4>天赋点分配</h4>
+                <div class="talent-points-display">
+                    <span class="talent-points-label">可用天赋点:</span>
+                    <span class="talent-points-value" id="available-talent-points">5</span>
+                </div>
+                <div class="talent-points-display">
+                    <span class="talent-points-label">已激活节点:</span>
+                    <span class="talent-points-value" id="activated-nodes">3/20</span>
+                </div>
+                <div class="talent-points-display">
+                    <span class="talent-points-label">当前树:</span>
+                    <span class="talent-points-value" id="current-tree-name">通用天赋树</span>
+                </div>
+            </div>
+
+            <!-- 天赋树切换 -->
+            <div class="talent-tree-selector">
+                <label for="talent-tree-select">选择天赋树:</label>
+                <select id="talent-tree-select" class="ui-select">
+                    <option value="general">通用天赋树</option>
+                    <option value="fool">愚者途径天赋树</option>
+                    <!-- 其他途径将动态加载 -->
+                </select>
+                <button class="ui-btn-secondary" id="load-tree-btn">加载</button>
+            </div>
+
+            <!-- 天赋树画布 -->
+            <div class="talent-tree-container">
+                <h3><span id="tree-title">通用天赋树</span> - <span id="tree-progress">3/5节点</span></h3>
+                <div class="talent-tree-canvas" id="talent-tree-canvas">
+                    <!-- 连接线动态生成 -->
+                    <div class="connection-layer" id="connection-layer"></div>
+                    <!-- 节点动态生成 -->
+                    <div class="nodes-layer" id="nodes-layer"></div>
+                </div>
+            </div>
+
+            <!-- 天赋预览面板 -->
+            <div class="talent-preview-panel" id="talent-preview-panel">
+                <div class="talent-preview-header">
+                    <div>
+                        <span class="talent-preview-name" id="preview-talent-name">天赋名称</span>
+                        <span class="talent-preview-type" id="preview-talent-type">combat</span>
+                    </div>
+                    <div class="talent-preview-cost">
+                        消耗: <span id="preview-talent-cost">1</span>天赋点
+                    </div>
+                </div>
+                <div class="talent-preview-description" id="preview-talent-description">
+                    天赋的详细描述将显示在这里...
+                </div>
+                <div class="talent-preview-effects">
+                    <h5>效果:</h5>
+                    <div id="preview-talent-effects">
+                        <div class="talent-effect-item">效果1</div>
+                        <div class="talent-effect-item">效果2</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 天赋点分配控制 -->
+            <div class="talent-controls">
+                <div>
+                    <button class="talent-assign-btn" id="activate-talent-btn" disabled>
+                        <i class="fas fa-bolt"></i> 激活天赋
+                    </button>
+                    <span class="hint" id="activation-hint">请先选择可激活的天赋节点</span>
+                </div>
+                <div>
+                    <button class="talent-respec-btn" id="respec-talent-btn">
+                        <i class="fas fa-redo"></i> 重置天赋 (消耗: 500金币)
+                    </button>
+                    <span class="hint">重新分配所有天赋点</span>
+                </div>
+            </div>
+
+            <!-- 导航按钮 -->
+            <div class="talent-navigation">
+                <button class="ui-btn-secondary" id="zoom-in-btn" title="放大">
+                    <i class="fas fa-search-plus"></i>
+                </button>
+                <button class="ui-btn-secondary" id="zoom-out-btn" title="缩小">
+                    <i class="fas fa-search-minus"></i>
+                </button>
+                <button class="ui-btn-secondary" id="reset-view-btn" title="重置视图">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="ui-btn-secondary" id="view-full-tree-btn" title="查看完整树">
+                    <i class="fas fa-expand-alt"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// 天赋树管理器
+class TalentTreeManager {
+    constructor() {
+        this.currentTree = null;
+        this.selectedNode = null;
+        this.canvas = document.getElementById('talent-tree-canvas');
+        this.connectionLayer = document.getElementById('connection-layer');
+        this.nodesLayer = document.getElementById('nodes-layer');
+        this.scale = 1.0;
+        this.offset = { x: 0, y: 0 };
+        
+        // 绑定事件
+        this.bindEvents();
+        
+        // 初始加载通用天赋树
+        this.loadTalentTree('general');
+    }
+    
+    bindEvents() {
+        // 树选择器
+        document.getElementById('load-tree-btn').addEventListener('click', () => {
+            const treeId = document.getElementById('talent-tree-select').value;
+            this.loadTalentTree(treeId);
+        });
+        
+        // 节点激活按钮
+        document.getElementById('activate-talent-btn').addEventListener('click', () => {
+            if (this.selectedNode) {
+                this.activateTalent(this.selectedNode.id);
+            }
+        });
+        
+        // 重置天赋按钮
+        document.getElementById('respec-talent-btn').addEventListener('click', () => {
+            this.respecTalents();
+        });
+        
+        // 导航按钮
+        document.getElementById('zoom-in-btn').addEventListener('click', () => this.zoom(1.2));
+        document.getElementById('zoom-out-btn').addEventListener('click', () => this.zoom(0.8));
+        document.getElementById('reset-view-btn').addEventListener('click', () => this.resetView());
+        document.getElementById('view-full-tree-btn').addEventListener('click', () => this.viewFullTree());
+        
+        // 关闭按钮
+        document.getElementById('talent-close').addEventListener('click', () => {
+            document.getElementById('talent-modal').style.display = 'none';
+        });
+    }
+    
+    async loadTalentTree(treeId) {
+        try {
+            const response = await fetch(`data/talent_trees/${treeId}.json`);
+            if (!response.ok) {
+                throw new Error(`无法加载天赋树: ${treeId}`);
+            }
+            
+            this.currentTree = await response.json();
+            this.renderTalentTree();
+            this.updateUI();
+            
+        } catch (error) {
+            console.error('加载天赋树失败:', error);
+            alert('加载天赋树失败，请检查网络连接或文件是否存在');
+        }
+    }
+    
+    renderTalentTree() {
+        if (!this.currentTree || !this.currentTree.nodes) return;
+        
+        // 清空画布
+        this.connectionLayer.innerHTML = '';
+        this.nodesLayer.innerHTML = '';
+        
+        const nodes = this.currentTree.nodes;
+        
+        // 先绘制连接线
+        Object.values(nodes).forEach(node => {
+            if (node.prerequisites && node.prerequisites.length > 0) {
+                node.prerequisites.forEach(prereqId => {
+                    const prereqNode = nodes[prereqId];
+                    if (prereqNode) {
+                        this.drawConnection(prereqNode, node);
+                    }
+                });
+            }
+        });
+        
+        // 绘制节点
+        Object.values(nodes).forEach(node => {
+            this.renderTalentNode(node);
+        });
+    }
+    
+    drawConnection(fromNode, toNode) {
+        // 计算节点中心位置
+        const fromX = (fromNode.column || 0) * 120 + 35;
+        const fromY = (fromNode.tier || 0) * 120 + 35;
+        const toX = (toNode.column || 0) * 120 + 35;
+        const toY = (toNode.tier || 0) * 120 + 35;
+        
+        // 计算距离和角度
+        const dx = toX - fromX;
+        const dy = toY - fromY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+        
+        // 创建连接线
+        const connection = document.createElement('div');
+        connection.className = 'talent-connection';
+        connection.style.width = `${distance}px`;
+        connection.style.left = `${fromX}px`;
+        connection.style.top = `${fromY}px`;
+        connection.style.transform = `rotate(${angle}deg)`;
+        
+        this.connectionLayer.appendChild(connection);
+    }
+    
+    renderTalentNode(node) {
+        const nodeEl = document.createElement('div');
+        nodeEl.className = 'talent-node';
+        nodeEl.dataset.id = node.id;
+        nodeEl.dataset.type = node.type;
+        nodeEl.title = node.name;
+        
+        // 设置位置
+        const left = (node.column || 0) * 120;
+        const top = (node.tier || 0) * 120;
+        nodeEl.style.left = `${left}px`;
+        nodeEl.style.top = `${top}px`;
+        
+        // 设置解锁状态
+        const isUnlocked = this.checkNodeUnlocked(node);
+        const isActivated = this.checkNodeActivated(node);
+        
+        if (isActivated) {
+            nodeEl.classList.add('activated');
+        } else if (isUnlocked) {
+            nodeEl.classList.add('unlocked');
+        } else {
+            nodeEl.classList.add('locked');
+        }
+        
+        // 节点内容
+        nodeEl.innerHTML = `
+            <div class="talent-node-icon">
+                ${this.getNodeIcon(node.type)}
+            </div>
+        `;
+        
+        // 点击事件
+        nodeEl.addEventListener('click', () => {
+            this.selectNode(node);
+        });
+        
+        this.nodesLayer.appendChild(nodeEl);
+    }
+    
+    getNodeIcon(type) {
+        const icons = {
+            'combat': '⚔️',
+            'utility': '🛡️',
+            'pathway': '🔮',
+            'team': '👥',
+            'skill_enhancement': '✨'
+        };
+        return icons[type] || '⭐';
+    }
+    
+    checkNodeUnlocked(node) {
+        // 检查前置条件是否满足
+        if (!node.prerequisites || node.prerequisites.length === 0) {
+            return true;
+        }
+        
+        // 需要查询游戏状态来确认
+        // 这里简化处理，假设前置节点已激活
+        return true;
+    }
+    
+    checkNodeActivated(node) {
+        // 查询游戏状态，检查节点是否已激活
+        // 这里简化处理
+        return Math.random() > 0.5;
+    }
+    
+    selectNode(node) {
+        // 取消之前选中节点的样式
+        if (this.selectedNode) {
+            const prevNode = document.querySelector(`.talent-node[data-id="${this.selectedNode.id}"]`);
+            if (prevNode) {
+                prevNode.classList.remove('active');
+            }
+        }
+        
+        // 设置新选中节点
+        this.selectedNode = node;
+        const currentNode = document.querySelector(`.talent-node[data-id="${node.id}"]`);
+        if (currentNode) {
+            currentNode.classList.add('active');
+        }
+        
+        // 更新预览面板
+        this.updatePreviewPanel(node);
+        
+        // 更新激活按钮状态
+        this.updateActivationButton();
+    }
+    
+    updatePreviewPanel(node) {
+        const previewPanel = document.getElementById('talent-preview-panel');
+        previewPanel.classList.add('active');
+        
+        document.getElementById('preview-talent-name').textContent = node.name;
+        document.getElementById('preview-talent-type').textContent = node.type;
+        document.getElementById('preview-talent-cost').textContent = node.cost || 1;
+        document.getElementById('preview-talent-description').textContent = node.description;
+        
+        // 更新效果列表
+        const effectsContainer = document.getElementById('preview-talent-effects');
+        effectsContainer.innerHTML = '';
+        
+        if (node.effects && Array.isArray(node.effects)) {
+            node.effects.forEach(effect => {
+                const effectEl = document.createElement('div');
+                effectEl.className = 'talent-effect-item';
+                
+                let effectText = '';
+                if (effect.type === 'stat_boost') {
+                    effectText = `${effect.stat} +${effect.value}`;
+                } else if (effect.type === 'unlock_feature') {
+                    effectText = `解锁: ${effect.value}`;
+                } else if (effect.type === 'combat_effect') {
+                    effectText = effect.value || effect.effectId;
+                }
+                
+                effectEl.textContent = effectText;
+                effectsContainer.appendChild(effectEl);
+            });
+        }
+    }
+    
+    updateActivationButton() {
+        const activateBtn = document.getElementById('activate-talent-btn');
+        const hint = document.getElementById('activation-hint');
+        
+        if (!this.selectedNode) {
+            activateBtn.disabled = true;
+            hint.textContent = '请先选择天赋节点';
+            return;
+        }
+        
+        const node = this.selectedNode;
+        const isActivated = this.checkNodeActivated(node);
+        const isUnlocked = this.checkNodeUnlocked(node);
+        const hasPoints = true; // 假设有足够天赋点
+        
+        if (isActivated) {
+            activateBtn.disabled = true;
+            hint.textContent = '此天赋已激活';
+        } else if (!isUnlocked) {
+            activateBtn.disabled = true;
+            hint.textContent = '前置条件未满足';
+        } else if (!hasPoints) {
+            activateBtn.disabled = true;
+            hint.textContent = '天赋点不足';
+        } else {
+            activateBtn.disabled = false;
+            hint.textContent = `点击激活 "${node.name}"`;
+        }
+    }
+    
+    activateTalent(nodeId) {
+        // 发送请求到游戏管理器激活天赋
+        if (window.gameManager && window.gameManager.activateTalent) {
+            const success = window.gameManager.activateTalent(nodeId);
+            if (success) {
+                this.updateUI();
+                this.renderTalentTree();
+                this.selectNode(this.selectedNode); // 刷新选中状态
+            }
+        } else {
+            console.log(`激活天赋: ${nodeId}`);
+            // 模拟激活
+            alert(`天赋 "${this.selectedNode.name}" 已激活!`);
+            this.updateUI();
+        }
+    }
+    
+    respecTalents() {
+        if (confirm('确定要重置所有天赋点吗？这将消耗500金币。')) {
+            // 发送请求到游戏管理器重置天赋
+            if (window.gameManager && window.gameManager.respecTalents) {
+                const success = window.gameManager.respecTalents();
+                if (success) {
+                    this.updateUI();
+                    this.renderTalentTree();
+                }
+            } else {
+                alert('天赋已重置！');
+                this.updateUI();
+            }
+        }
+    }
+    
+    updateUI() {
+        // 更新天赋点显示
+        const availablePoints = 5; // 从游戏状态获取
+        const activatedNodes = 3; // 从游戏状态获取
+        const totalNodes = Object.keys(this.currentTree?.nodes || {}).length;
+        
+        document.getElementById('available-talent-points').textContent = availablePoints;
+        document.getElementById('activated-nodes').textContent = `${activatedNodes}/${totalNodes}`;
+        document.getElementById('current-tree-name').textContent = this.currentTree?.name || '未知';
+        document.getElementById('tree-title').textContent = this.currentTree?.name || '未知';
+        document.getElementById('tree-progress').textContent = `${activatedNodes}/${totalNodes}节点`;
+    }
+    
+    zoom(factor) {
+        this.scale *= factor;
+        this.canvas.style.transform = `scale(${this.scale})`;
+    }
+    
+    resetView() {
+        this.scale = 1.0;
+        this.offset = { x: 0, y: 0 };
+        this.canvas.style.transform = `scale(${this.scale}) translate(${this.offset.x}px, ${this.offset.y}px)`;
+    }
+    
+    viewFullTree() {
+        // 调整视图以显示整个天赋树
+        this.scale = 0.8;
+        this.offset = { x: -50, y: -50 };
+        this.canvas.style.transform = `scale(${this.scale}) translate(${this.offset.x}px, ${this.offset.y}px)`;
+    }
+}
+
+// 当组件加载时初始化天赋树管理器
+document.addEventListener('DOMContentLoaded', () => {
+    window.talentTreeManager = new TalentTreeManager();
+});
+</script>

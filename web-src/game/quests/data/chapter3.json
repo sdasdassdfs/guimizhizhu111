@@ -1,0 +1,323 @@
+{
+  "chapter": 3,
+  "title": "神战序曲",
+  "description": "各方真神开始布局神战，你因前两章积累的因果被卷入更高层次博弈。必须在天使与真神的夹缝中求生，最终决定自己的道路。",
+  "quests": [
+    {
+      "id": "story_ch3_angel_contact",
+      "name": "天使接触",
+      "type": "主线",
+      "chapter": 3,
+      "description": "你的行动引起了更高层次存在的注意。至少一位天使级存在试图与你建立联系。",
+      "giverId": "system",
+      "objectives": [
+        {
+          "id": "angel_objective1",
+          "description": "回应天使的召唤",
+          "type": "交谈",
+          "requiredCount": 1,
+          "currentCount": 0,
+          "targetId": "angel_contact"
+        },
+        {
+          "id": "angel_objective2",
+          "description": "完成天使的考验",
+          "type": "探索",
+          "requiredCount": 1,
+          "currentCount": 0,
+          "targetId": "angel_trial"
+        }
+      ],
+      "rewards": {
+        "experience": 2000,
+        "gold": 500,
+        "items": ["天使信物"],
+        "reputation": {},
+        "attributePoints": 3,
+        "skillPoints": 2,
+        "unlockFeatures": ["天使注视"]
+      },
+      "prerequisites": ["story_ch2_ritual_stop"],
+      "sequenceRequirement": 6,
+      "timeLimit": null,
+      "branchPoints": [
+        {
+          "id": "ch3_branch1_final_stance",
+          "description": "面对即将到来的神战，你决定站在哪一边？",
+          "location": "灵界边界",
+          "choices": [
+            {
+              "id": "join_night_church",
+              "text": "加入黑夜教会",
+              "effects": {
+                "requirements": { "reputation_nightwatch": 30 },
+                "effects": {
+                  "flags": { "joined_night_church": true },
+                  "unlock": ["黑夜途径晋升机会"],
+                  "reputation": { "faction": "night_church", "amount": 50 }
+                }
+              }
+            },
+            {
+              "id": "establish_secret_org",
+              "text": "建立隐秘组织",
+              "effects": {
+                "requirements": { "charisma": 15, "independence": true },
+                "effects": {
+                  "flags": { "founded_secret_org": true },
+                  "unlock": ["组织管理技能", "招募NPC功能"],
+                  "experience": 3000
+                }
+              }
+            },
+            {
+              "id": "seek_fool_protection",
+              "text": "寻求愚者庇护",
+              "effects": {
+                "requirements": { "occult": 12, "hidden_flag": true },
+                "effects": {
+                  "flags": { "fool_protection": true },
+                  "unlock": ["隐藏剧情线", "与克莱恩联系"],
+                  "items": ["灰雾邀请函"]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "nextQuestId": "story_ch3_divinity_choice",
+      "failCondition": null
+    },
+    {
+      "id": "story_ch3_divinity_choice",
+      "name": "神性抉择",
+      "type": "主线",
+      "chapter": 3,
+      "description": "你必须选择自己的信仰——拥抱某位真神的力量，或是坚持人类的独立性。",
+      "giverId": "npc_ariana",
+      "objectives": [
+        {
+          "id": "divinity_objective1",
+          "description": "参与黑夜教会的祈祷仪式",
+          "type": "使用",
+          "requiredCount": 1,
+          "currentCount": 0,
+          "targetId": "prayer_ritual"
+        },
+        {
+          "id": "divinity_objective2",
+          "description": "做出最终的信仰选择",
+          "type": "交谈",
+          "requiredCount": 1,
+          "currentCount": 0,
+          "targetId": "faith_decision"
+        }
+      ],
+      "rewards": {
+        "experience": 2200,
+        "gold": 600,
+        "items": ["神圣徽记"],
+        "reputation": {},
+        "attributePoints": 3,
+        "skillPoints": 2,
+        "unlockFeatures": ["信仰领域能力"]
+      },
+      "prerequisites": ["story_ch3_angel_contact"],
+      "sequenceRequirement": 6,
+      "timeLimit": null,
+      "branchPoints": [
+        {
+          "id": "ch3_branch2_divinity_tendency",
+          "description": "面对神性的诱惑，你的内心倾向哪一方？",
+          "location": "黑夜教会圣堂",
+          "choices": [
+            {
+              "id": "tend_night_goddess",
+              "text": "倾向黑夜女神",
+              "effects": {
+                "effects": {
+                  "flags": { "faith_night_goddess": true },
+                  "unlock": ["隐秘领域能力"],
+                  "reputation": { "faction": "night_church", "amount": 40 },
+                  "items": ["黑夜圣徽"]
+                }
+              }
+            },
+            {
+              "id": "tend_true_creator",
+              "text": "倾向真实造物主",
+              "effects": {
+                "requirements": { "corruption_resistance": 8 },
+                "effects": {
+                  "flags": { "faith_true_creator": true },
+                  "unlock": ["堕落领域能力"],
+                  "reputation": { "faction": "aurora_order", "amount": 50 },
+                  "risk": "可能逐渐失去理智"
+                }
+              }
+            },
+            {
+              "id": "remain_faithless",
+              "text": "保持无信仰",
+              "effects": {
+                "effects": {
+                  "flags": { "faithless": true },
+                  "unlock": ["自由特质", "人性增强"],
+                  "attributeBonus": { "willpower": 5 },
+                  "risk": "面临各方压力"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "nextQuestId": "story_ch3_sequence4_ascension",
+      "failCondition": null
+    },
+    {
+      "id": "story_ch3_sequence4_ascension",
+      "name": "序列4晋升",
+      "type": "主线",
+      "chapter": 3,
+      "description": "你已达到序列5的巅峰，现在面临成为半神的抉择——举行晋升仪式，或是选择另一条道路。",
+      "giverId": "npc_will_onsetin",
+      "objectives": [
+        {
+          "id": "ascension_objective1",
+          "description": "收集晋升仪式所需材料",
+          "type": "收集",
+          "requiredCount": 5,
+          "currentCount": 0,
+          "targetId": "ascension_materials"
+        },
+        {
+          "id": "ascension_objective2",
+          "description": "完成最终的抉择",
+          "type": "交谈",
+          "requiredCount": 1,
+          "currentCount": 0,
+          "targetId": "final_choice"
+        }
+      ],
+      "rewards": {
+        "experience": 3000,
+        "gold": 800,
+        "items": ["半神特性"],
+        "reputation": {},
+        "attributePoints": 5,
+        "skillPoints": 3,
+        "unlockFeatures": ["半神领域"]
+      },
+      "prerequisites": ["story_ch3_divinity_choice"],
+      "sequenceRequirement": 5,
+      "timeLimit": 259200,
+      "branchPoints": [
+        {
+          "id": "ch3_branch3_ascension_choice",
+          "description": "你将如何完成序列4的晋升？",
+          "location": "晋升祭坛",
+          "choices": [
+            {
+              "id": "hold_formal_ritual",
+              "text": "举行正规仪式",
+              "effects": {
+                "requirements": { "materials_collected": true, "time_available": true },
+                "effects": {
+                  "successRate": 85,
+                  "effects": {
+                    "flags": { "become_demigod": true },
+                    "attributeBonus": { "all": 10 },
+                    "unlock": ["半神威能"]
+                  },
+                  "failureEffects": {
+                    "status": "晋升失败",
+                    "attributePenalty": { "all": 5 }
+                  }
+                }
+              }
+            },
+            {
+              "id": "seek_evil_blessing",
+              "text": "寻求邪神赐福",
+              "effects": {
+                "requirements": { "corruption": 20 },
+                "effects": {
+                  "successRate": 95,
+                  "effects": {
+                    "flags": { "demigod_corrupted": true },
+                    "attributeBonus": { "all": 12 },
+                    "unlock": ["腐化半神能力"],
+                    "negativeStatus": ["疯狂倾向", "污染光环"]
+                  },
+                  "failureEffects": {
+                    "status": "完全失控",
+                    "gameOver": true
+                  }
+                }
+              }
+            },
+            {
+              "id": "abandon_ascension",
+              "text": "放弃晋升",
+              "effects": {
+                "effects": {
+                  "flags": { "humanity_guardian": true },
+                  "title": "人性守护者",
+                  "unlock": ["人性守护技能", "特殊对话选项"],
+                  "attributeBonus": { "willpower": 8, "charisma": 5 }
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "nextQuestId": null,
+      "failCondition": {
+        "type": "timeout",
+        "duration": 259200
+      }
+    }
+  ],
+  "npcs": [
+    {
+      "id": "npc_ariana",
+      "name": "阿里安娜",
+      "description": "黑夜教会大主教，序列2隐秘之仆，代表黑夜女神意志的天使级存在。",
+      "location": "黑夜教会总部",
+      "dialogueTree": {
+        "startNode": "audience",
+        "nodes": [
+          {
+            "id": "audience",
+            "speaker": "阿里安娜",
+            "text": "女神在梦中向我展示了你的身影。你的灵魂中既有光明的潜质，也有黑暗的阴影。",
+            "choices": [
+              { "id": "ask_meaning", "text": "这意味着什么？", "nextNodeId": "explanation" },
+              { "id": "ask_test", "text": "我需要通过什么考验？", "nextNodeId": "trial" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "npc_will_onsetin",
+      "name": "威尔·昂赛汀",
+      "description": "命运途径的天使，序列1水银之蛇，以婴儿形态出现的古老存在。",
+      "location": "命运交织点",
+      "dialogueTree": {
+        "startNode": "fateful_meeting",
+        "nodes": [
+          {
+            "id": "fateful_meeting",
+            "speaker": "威尔·昂赛汀",
+            "text": "咕...你的命运线很有趣呢。既不是纯粹的直线，也不是完全的螺旋。",
+            "choices": [
+              { "id": "ask_destiny", "text": "我的命运会如何？", "nextNodeId": "destiny_read" },
+              { "id": "ask_contract", "text": "我们能达成契约吗？", "nextNodeId": "contract_offer" }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

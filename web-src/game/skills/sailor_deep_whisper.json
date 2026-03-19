@@ -1,0 +1,30 @@
+{
+  "id": "skill_deep_whisper",
+  "name": "深海低语",
+  "description": "水手途径控制技能。发出源自深海的低语，使单个敌人陷入混乱状态，随机攻击友方或自身。",
+  "pathway": "水手",
+  "sequenceRequirement": "6",
+  "type": "debuff",
+  "target": "single",
+  "spiritCost": 60,
+  "cooldownTurns": 4,
+  "durationTurns": 2,
+  "effects": [
+    {
+      "type": "confusion",
+      "value": 0.7,
+      "description": "70%概率使敌人混乱，持续2回合"
+    },
+    {
+      "type": "sanityDamage",
+      "value": 20,
+      "description": "造成20点理智伤害"
+    }
+  ],
+  "animation": "deep_whisper",
+  "icon": "🐚",
+  "damageFormula": null,
+  "healFormula": null,
+  "isAOE": false,
+  "unlockCondition": "水手序列6以上"
+}

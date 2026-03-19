@@ -1,0 +1,73 @@
+{
+  "id": "enemy_fear_bishop",
+  "name": "恐惧主教",
+  "description": "审判者途径序列3，掌握恐惧与审判的权柄。身着暗红教袍，头戴荆棘冠冕，周身散发压迫性的灵性威压。",
+  "sequence": "3",
+  "pathway": "审判者",
+  "level": 40,
+  "health": 2000,
+  "maxHealth": 2000,
+  "attack": 150,
+  "defense": 150,
+  "spirit": 500,
+  "maxSpirit": 500,
+  "sanity": 400,
+  "speed": 100,
+  "skills": [
+    "fear_aura",
+    "judgment",
+    "pain_infusion",
+    "divine_punishment"
+  ],
+  "lootTable": [
+    {
+      "itemId": "item_sequin_3",
+      "name": "序列3非凡特性·审判者",
+      "chance": 0.2,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "itemId": "item_judgment_scroll",
+      "name": "审判卷轴",
+      "chance": 0.4,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "itemId": "item_fear_essence",
+      "name": "恐惧精华",
+      "chance": 0.9,
+      "minCount": 1,
+      "maxCount": 3
+    },
+    {
+      "itemId": "item_gold",
+      "name": "金币",
+      "chance": 1.0,
+      "minCount": 800,
+      "maxCount": 1500
+    }
+  ],
+  "resistances": {
+    "mental": 0.3,
+    "dark": 0.7,
+    "light": 0.7,
+    "holy": 0.5
+  },
+  "weaknesses": ["chaos", "arcane"],
+  "aiBehavior": "boss",
+  "aiPriority": ["debuff", "aoe", "heal", "ultimate"],
+  "phases": [
+    {
+      "healthThreshold": 0.7,
+      "newSkills": ["fear_aura", "pain_infusion"],
+      "description": "第一阶段：恐惧扩散"
+    },
+    {
+      "healthThreshold": 0.4,
+      "newSkills": ["judgment", "divine_punishment"],
+      "description": "第二阶段：审判降临"
+    }
+  ]
+}

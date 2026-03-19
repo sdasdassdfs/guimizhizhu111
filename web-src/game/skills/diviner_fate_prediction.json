@@ -1,0 +1,30 @@
+{
+  "id": "skill_fate_prediction",
+  "name": "命运预知",
+  "description": "占卜家途径专属技能。短暂窥见未来，预知敌人下一次行动，并大幅提升自身闪避率。",
+  "pathway": "占卜家",
+  "sequenceRequirement": "7",
+  "type": "buff",
+  "target": "self",
+  "spiritCost": 40,
+  "cooldownTurns": 4,
+  "durationTurns": 2,
+  "effects": [
+    {
+      "type": "dodgeBoost",
+      "value": 0.5,
+      "description": "闪避率提升50%"
+    },
+    {
+      "type": "enemyReveal",
+      "value": 1,
+      "description": "揭示敌人下一次使用的技能"
+    }
+  ],
+  "animation": "clairvoyance",
+  "icon": "🔮",
+  "damageFormula": null,
+  "healFormula": null,
+  "isAOE": false,
+  "unlockCondition": "占卜家序列7以上"
+}
